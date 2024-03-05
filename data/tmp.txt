@@ -1,1 +1,3 @@
-Les bases de données téléchargables.
+├── data               <- Should be in your computer but not on Github (only in .gitignore)
+│   ├── processed      <- The final, canonical data sets for modeling.
+│   └── raw            <- The original, immutable data dump.
