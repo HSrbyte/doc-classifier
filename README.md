@@ -9,6 +9,10 @@ Download Git project:
 ```shell
 git clone https://github.com/Scientest23/doc-classifier
 cd doc-classifier
+
+# User config :
+git config user.name "YourName"
+git config user.email "YourEmail"
 ```
 
 Create python environnement :
