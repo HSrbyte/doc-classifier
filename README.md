@@ -35,10 +35,21 @@ pip install --update pip
 pip install -r requirements.txt
 ```
 
+## 📄 Datasets
+
+Name | Size | images | Download
+-----|------|--------|-----------
+Text extraction for OCR| 33.5 Mo | 520 | [Google Drive](https://drive.google.com/file/d/1w0FhoxyHAjFrWJBQ63JiJFPBsxBEUOVO/view?usp=drive_link)
+Projet OCR classification | 203.3 Mo | 1 608 | [Google Drive](https://drive.google.com/file/d/1wDa-pXwdUmEpubo8UjGwQCWzZt9PNZbI/view?usp=drive_link)
+RVL-CDIP Dataset (5% of original dataset)| 1.8 Go | 20 000 | [Google Drive](https://drive.google.com/file/d/13V-hUMebr5PZjqNcuwxUPlB6u7lEq_gB/view?usp=drive_link)
+PRADO | 139.6 Mo | 1 589 | [Google Drive](https://drive.google.com/file/d/1Seii3yeWKoc4f9eUNcgAwDtFleO0yjUm/view?usp=drive_link)
+RVL-CDIP Dataset | 38.8 Go | 400 000 | [Hugging Face](https://huggingface.co/datasets/aharley/rvl_cdip/resolve/main/data/rvl-cdip.tar.gz?download=true)
+
+
 
 ----
 
-Authors:
+## 🙌 Authors:
 - Bryan Fernandez
 - Ayoub Benkou
 - Achraf Asri
