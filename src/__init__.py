@@ -1,7 +1,9 @@
 from .dataloader.transformers import image_rotate
 
-from .text_mining import (tesseract_osd, tesseract_ocr, tesseract_ocr_postprocess,
-                          tesseract_image_process, tesseract_data_process)
+from .text_mining.nltk import *
+
+from .text_mining.tesseract import (tesseract_osd, tesseract_ocr,
+    tesseract_ocr_postprocess, tesseract_image_process, tesseract_data_process)
 
 from .utils.misc import extract_tar_gz, save_jsonfile, read_jsonfile
 

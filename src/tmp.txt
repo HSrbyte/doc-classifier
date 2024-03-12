@@ -11,3 +11,14 @@
 │   │
 │   ├── visualization  <- Scripts to create exploratory and results oriented visualizations
 │   │   └── visualize.py
+│   │
+│   ├── dataloader     <- Scripts to create dataloader for training.
+│   │   ├── transformers.py
+│   │   └── pipeline.py
+│   │
+│   ├── utils
+│   │   └── misc.py
+│   │
+│   ├── text_mining
+│   │   ├── nltk.py
+│   │   └── tesseract.py
