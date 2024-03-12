@@ -3,6 +3,7 @@ import random
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from wordcloud import WordCloud
 
 
 from typing import Tuple, Union, Optional, List
@@ -11,9 +12,9 @@ from typing import Tuple, Union, Optional, List
 def draw_tesseract_result(
     data: pd.DataFrame,
     image: np.ndarray,
-    bbox_color: Tuple[int, int, int] = (255,0,0),
+    bbox_color: Tuple[int, int, int] = (255, 0, 0),
     bbox_thickness: int = 1
-    ) -> np.ndarray:
+) -> np.ndarray:
     """Draw bounding boxes and text annotations on the input image based on the
     data provided.
 
@@ -46,27 +47,27 @@ def draw_tesseract_result(
                bbox[0][1] + title_height + int(bbox[1][1] - bbox[0][1]))
         new_image = cv2.putText(new_image, row['text'], org,
                                 cv2.FONT_HERSHEY_SIMPLEX, height_text,
-                                (0,0,0), 1, cv2.LINE_AA)
+                                (0, 0, 0), 1, cv2.LINE_AA)
 
     new_image[title_height:h+title_height, :w] = img
-    cv2.line(new_image, [w, 0], [w, h+title_height], (0,0,0), 2)
-    cv2.rectangle(new_image, [0, 0], [w*2, title_height], (0,0,0), -1)
+    cv2.line(new_image, [w, 0], [w, h+title_height], (0, 0, 0), 2)
+    cv2.rectangle(new_image, [0, 0], [w*2, title_height], (0, 0, 0), -1)
     new_image = cv2.putText(new_image, "Detection :", (int(w/3), 40),
                             cv2.FONT_HERSHEY_SIMPLEX, 1.2,
-                            (255,255,255), 2, cv2.LINE_AA)
+                            (255, 255, 255), 2, cv2.LINE_AA)
     new_image = cv2.putText(new_image, "Recognition :", (int(w/3)+w, 40),
                             cv2.FONT_HERSHEY_SIMPLEX, 1.2,
-                            (255,255,255), 2, cv2.LINE_AA)
+                            (255, 255, 255), 2, cv2.LINE_AA)
     return new_image
 
 
 def plot_image(
     image: Union[np.ndarray, str],
-    size: Tuple[int,int],
+    size: Tuple[int, int],
     title: Optional[str] = None,
     axis: bool = False,
     flip_image_layers: bool = True
-    ) -> None:
+) -> None:
     """Plot the input image.
 
     Parameters:
@@ -108,7 +109,7 @@ def image_grid_sample(
     grid_color: Union[Tuple[int, int, int], int] = 0,
     grid_thickness: int = 1,
     seed: int = -1,
-    ) -> np.ndarray:
+) -> np.ndarray:
     """Create a sample image by arranging a grid of input images.
 
     Parameters:
@@ -149,7 +150,8 @@ def image_grid_sample(
     """
     # check img_layout
     if img_layout not in ["auto", "center"]:
-        print(f"Not supported method: {img_layout}. Using default method: auto")
+        print(
+            f"Not supported method: {img_layout}. Using default method: auto")
         img_layout = "auto"
 
     # random sample
@@ -157,8 +159,8 @@ def image_grid_sample(
         if seed == -1:
             seed = random.randint(0, 9999999)
         random.seed(seed)
-        images = [images.pop(random.randint(0, len(images)-1)) \
-            for _ in range(height * width)]
+        images = [images.pop(random.randint(0, len(images)-1))
+                  for _ in range(height * width)]
 
     # Output image
     if isinstance(bg_color, int):
@@ -187,16 +189,16 @@ def image_grid_sample(
 
         if img_layout == "auto":
             img_out[
-                y_offset : y_offset + dim[1],
-                x_offset : x_offset + dim[0]
-                ] = img
+                y_offset: y_offset + dim[1],
+                x_offset: x_offset + dim[0]
+            ] = img
         elif img_layout == "center":
             cy_offset = (square_size - dim[1]) // 2
             cx_offset = (square_size - dim[0]) // 2
             img_out[
-                y_offset + cy_offset : y_offset + cy_offset + dim[1],
-                x_offset + cx_offset : x_offset + cx_offset + dim[0]
-                ] = img
+                y_offset + cy_offset: y_offset + cy_offset + dim[1],
+                x_offset + cx_offset: x_offset + cx_offset + dim[0]
+            ] = img
 
         x_offset += square_size
         if n % width == 0:
@@ -224,3 +226,35 @@ def image_grid_sample(
         cv2.line(img_out, p1, p2, grid_color, grid_thickness)
 
     return img_out
+
+
+def create_wordcloud(tokens,
+                     color="white"):
+    """
+    Generates a word cloud visualization from a list of tokens.
+
+    Parameters:
+        tokens (list): List of tokens to generate the word cloud from.
+        stop_words (set): Set of stop words to exclude from the word cloud.
+
+    Returns:
+        WordCloud: A WordCloud object representing the word cloud visualization.
+    """
+    # Join the tokens into a single string
+    filtered_unicode = ' '.join(tokens)
+
+    # Create a WordCloud object with specified parameters
+    wc = WordCloud(background_color=color,
+                   max_words=100,
+                   max_font_size=50,
+                   random_state=42)
+
+    # Générer et afficher le nuage de mots
+
+    plt.figure(figsize=(10, 8))
+    wc.generate(filtered_unicode)
+    plt.axis('off')
+    plt.imshow(wc)
+    plt.show()
+
+    return wc
