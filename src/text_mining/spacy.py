@@ -41,6 +41,3 @@ def lemmatize_french(words):
             lemmatized_words.append(token.lemma_)
 
     return lemmatized_words
-
-
-# TODO Synchronize the functions and test them

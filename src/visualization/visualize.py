@@ -228,14 +228,15 @@ def image_grid_sample(
     return img_out
 
 
-def create_wordcloud(tokens,
-                     color="white"):
+def create_wordcloud(tokens, color="white"):
     """
-    Generates a word cloud visualization from a list of tokens.
+    Generate a word cloud visualization from a list of tokens.
+
+    This function creates a word cloud visualization from a list of tokens.
 
     Parameters:
-        tokens (list): List of tokens to generate the word cloud from.
-        stop_words (set): Set of stop words to exclude from the word cloud.
+        tokens (list): A list of tokens to generate the word cloud from.
+        color (str, optional): The background color of the word cloud. Default is 'white'.
 
     Returns:
         WordCloud: A WordCloud object representing the word cloud visualization.
@@ -249,8 +250,7 @@ def create_wordcloud(tokens,
                    max_font_size=50,
                    random_state=42)
 
-    # Générer et afficher le nuage de mots
-
+    # Generate and display the word cloud
     plt.figure(figsize=(10, 8))
     wc.generate(filtered_unicode)
     plt.axis('off')
