@@ -57,3 +57,33 @@ def read_jsonfile(file_path: str, **kwargs) -> Union[List, dict]:
         raise FileNotFoundError("The specified file is not found.")
     except json.JSONDecodeError:
         raise json.JSONDecodeError("The JSON file is malformed.", "", 0)
+
+
+def get_all_files_from_data_folder(
+    data_name: str,
+    folder: str,
+    data_type: str = "raw",
+    only_names: bool = False
+    ) -> List[str]:
+    """Retrieve the paths or names of all files in a specific folder within a
+    data directory.
+
+    Args:
+        data_name (str): The name of the dataset.
+        folder (str): The name of the folder containing the files.
+        data_type (str, optional): The type of data directory (e.g., "raw",
+            "processed"). Default is "raw".
+        only_names (bool, optional): Whether to return only the names of the
+            files. Default is False.
+
+    Returns:
+        List[str]: A list of file paths if only_names is False, or a list of
+            file names otherwise.
+    """
+    data_path = os.path.join("data", data_type, data_name, folder)
+    all_filesnames = os.listdir(data_path)
+    if only_names:
+        return all_filesnames
+    all_files_paths = [os.path.join(data_path, filename) \
+        for filename in all_filesnames]
+    return all_files_paths
