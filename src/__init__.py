@@ -15,6 +15,14 @@ from .visualization.visualize import (draw_tesseract_result, plot_image,
 
 from .text_mining.xml import img_xml_unicode, img_xml_language, img_xml_dimension
 
+from .extract_info.bluriness import bluriness
+
+from .extract_info.gp_name import gp_name
+
+from .extract_info.img_info import img_info
+
+from .extract_info.extract_image_info import extract_image_info
+
 
 __all__ = [
     "extract_tar_gz", "save_jsonfile", "read_jsonfile", "plot_image", "image_grid_sample",
@@ -22,5 +30,5 @@ __all__ = [
     "tesseract_ocr_postprocess", "tesseract_image_process", "tesseract_data_process",
     "lemmatize_english", "lemmatize_french", "stop_words_filtering", "img_xml_unicode", "img_xml_language",
     "img_xml_dimension", "create_wordcloud", "detect_lang", "get_all_files_from_data_folder",
-    "barplot"
+    "barplot", "bluriness", "gp_name", "extract_image_info", "img_info"
 ]
