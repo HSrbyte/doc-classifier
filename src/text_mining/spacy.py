@@ -1,5 +1,29 @@
 import spacy
 
+from spacy.language import Language
+from spacy_langdetect import LanguageDetector
+
+from typing import Union, List
+
+
+def get_lang_detector(nlp, name):
+    return LanguageDetector()
+try:
+    Language.factory("language_detector", func=get_lang_detector)
+except:
+    pass
+nlp_en = spacy.load("en_core_web_sm")
+nlp_en.add_pipe('language_detector', last=True)
+
+def detect_lang(text: Union[str, List[str]]):
+
+    if isinstance(text, list):
+        text = ' '.join(text)
+    doc = nlp_en(text)
+    result = doc._.language
+    return result
+
+
 def check_and_download_model(model_name: str) -> None:
     """Check if the specified SpaCy model is installed. If not, download it.
 
