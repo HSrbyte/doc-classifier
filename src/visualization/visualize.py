@@ -2,10 +2,9 @@ import cv2
 import random
 import numpy as np
 import pandas as pd
+import seaborn as sns
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
-
-
 from typing import Tuple, Union, Optional, List
 
 
@@ -228,7 +227,45 @@ def image_grid_sample(
     return img_out
 
 
-def create_wordcloud(tokens, color="white"):
+def barplot(
+    x: List[float],
+    y: List[float],
+    figsize: Tuple[int, int] = (8, 6),
+    xlabel: Optional[str] = None,
+    ylabel: Optional[str] = None,
+    title: Optional[str] = None) -> None:
+    """Plot a bar chart.
+
+    Args:
+        x (List[float]): List of x-axis values.
+        y (List[float]): List of y-axis values.
+        figsize (Tuple[int, int], optional): Size of the figure. Default is (8, 6).
+        xlabel (Optional[str], optional): Label for the x-axis. Default is None.
+        ylabel (Optional[str], optional): Label for the y-axis. Default is None.
+        title (Optional[str], optional): Title of the plot. Default is None.
+
+    Returns:
+        None
+    """
+    # Plot the bar chart
+    plt.figure(figsize=figsize)
+    sns.barplot(x=x, y=y)
+    plt.grid(axis='x', linestyle='--', alpha=0.7)
+    plt.xlabel(xlabel, fontsize=12)
+    plt.ylabel(ylabel, fontsize=12)
+    plt.title(title, fontsize=15)
+    plt.xlim((0, max(x) + max(x)*0.15))
+    for i, value in enumerate(x):
+        plt.text(value + max(x)*0.01, i, f"{(value/sum(x))*100:.02f} %",
+                 ha='left', va='center', fontsize=10)
+    plt.tight_layout()
+    plt.show()
+
+
+def create_wordcloud(tokens: List[str],
+                     color="white",
+                     figsize: Tuple[int]=(10, 8),
+                     title: str=None) -> None:
     """
     Generate a word cloud visualization from a list of tokens.
 
@@ -237,6 +274,8 @@ def create_wordcloud(tokens, color="white"):
     Parameters:
         tokens (list): A list of tokens to generate the word cloud from.
         color (str, optional): The background color of the word cloud. Default is 'white'.
+        figsize: (Tuple[int, int], opional): Size of the figure. Default is (10, 8).
+        title (str, optional): Title of the plot. Default is None.
 
     Returns:
         WordCloud: A WordCloud object representing the word cloud visualization.
@@ -251,9 +290,11 @@ def create_wordcloud(tokens, color="white"):
                    random_state=42)
 
     # Generate and display the word cloud
-    plt.figure(figsize=(10, 8))
+    plt.figure(figsize=figsize)
     wc.generate(filtered_unicode)
     plt.axis('off')
+    if title is not None:
+        plt.title(title)
     plt.imshow(wc)
     plt.show()
 
