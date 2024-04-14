@@ -2,7 +2,7 @@ import xml.etree.ElementTree as ET
 import pandas as pd
 
 
-def img_xml_unicode(list_filename, filepath):
+def img_xml_unicode(xmlname, filepath):
     """
     Extract Unicode text from XML files.
 
@@ -19,18 +19,18 @@ def img_xml_unicode(list_filename, filepath):
     unicode_text = ''
 
     # Parsing XML files
-    for xmlname in list_filename:
-        if xmlname != 'desktop.ini':
-            tree = ET.parse(filepath + "/" + xmlname)
-            root = tree.getroot()
-            url = root.tag.split("}", 1)[0][1:]
 
-            # Accessing the <Unicode> attribute
-            unicode_elements = root.findall(f'.//{{{url}}}Unicode')
+    if xmlname != 'desktop.ini':
+        tree = ET.parse(filepath + "/" + xmlname)
+        root = tree.getroot()
+        url = root.tag.split("}", 1)[0][1:]
 
-            # Extracting text from the <Unicode> attribute
-            for element in unicode_elements:
-                unicode_text += ' ' + element.text
+        # Accessing the <Unicode> attribute
+        unicode_elements = root.findall(f'.//{{{url}}}Unicode')
+
+        # Extracting text from the <Unicode> attribute
+        for element in unicode_elements:
+            unicode_text += ' ' + element.text
 
     return unicode_text
 
