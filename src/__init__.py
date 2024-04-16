@@ -4,10 +4,14 @@ from .text_mining.nltk import stop_words_filtering
 
 from .text_mining.spacy import lemmatize_english, lemmatize_french, detect_lang
 
-from .text_mining.tesseract import (tesseract_osd, tesseract_ocr,
-                                    tesseract_ocr_postprocess, tesseract_image_process, tesseract_data_process)
+from .text_mining.tesseract import (tesseract_osd, tesseract_ocr, tesseract_ocr_postprocess,
+                                    tesseract_image_process, tesseract_data_process)
 
-from .utils.misc import extract_tar_gz, save_jsonfile, read_jsonfile, get_all_files_from_data_folder
+from .text_mining.text_process import (extract_document_length, calculate_lexical_diversity,
+                                       calculate_keyword_density)
+
+from .utils.misc import (extract_tar_gz, save_jsonfile, read_jsonfile,
+                         get_all_files_from_data_folder)
 
 from .visualization.visualize import (draw_tesseract_result, plot_image,
                                       image_grid_sample, create_wordcloud,
@@ -33,5 +37,6 @@ __all__ = [
     "tesseract_ocr_postprocess", "tesseract_image_process", "tesseract_data_process",
     "lemmatize_english", "lemmatize_french", "stop_words_filtering", "img_xml_unicode", "img_xml_language",
     "img_xml_dimension", "create_wordcloud", "detect_lang", "get_all_files_from_data_folder",
-    "barplot", "bluriness", "gp_name", "extract_image_info", "img_info", "compute_color_histogram"
+    "barplot", "bluriness", "gp_name", "extract_image_info", "img_info", "compute_color_histogram",
+    "extract_document_length", "calculate_lexical_diversity", "calculate_keyword_density"
 ]
