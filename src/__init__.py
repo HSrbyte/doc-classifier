@@ -1,6 +1,6 @@
 from .dataloader.degradation import image_jpg_compress
 from .dataloader.io import image_read
-from .dataloader.geometric import image_rotate, image_flip
+from .dataloader.geometric import image_rotate, image_flip, image_resize
 
 
 
@@ -51,5 +51,5 @@ __all__ = [
     "img_xml_dimension", "create_wordcloud", "detect_lang", "get_all_files_from_data_folder",
     "barplot", "bluriness", "gp_name", "extract_image_info", "img_info", "compute_color_histogram",
     "extract_document_length", "calculate_lexical_diversity", "calculate_keyword_density", "image_read",
-    "image_flip", "image_jpg_compress",
+    "image_flip", "image_jpg_compress", "image_resize"
 ]

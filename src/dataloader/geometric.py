@@ -1,8 +1,17 @@
 import cv2
 import numpy as np
 
+from PIL import Image
 from typing import Optional, Tuple, Union
 
+pil_interp_codes = {
+    'nearest': Image.NEAREST,
+    'box': Image.BOX,
+    'bilinear': Image.BILINEAR,
+    'bicubic': Image.BICUBIC,
+    'hamming': Image.HAMMING,
+    'lanczos': Image.LANCZOS
+}
 
 cv2_interp_codes = {
     'nearest': cv2.INTER_NEAREST,
@@ -90,6 +99,76 @@ def image_rotate(
         return rotated, rotated_matrix
     else:
         return rotated
+
+
+def image_resize(input_image: np.ndarray,
+                 output_size: Tuple[int, int] = (224, 224),
+                 interpolation: str = 'lanczos',
+                 keep_ratio: bool = True,
+                 center_image: bool = True,
+                 background_color: Union[Tuple[int, int, int], int]=(0, 0, 0)
+                 ) -> np.ndarray:
+    """
+    Resize an input image to the specified output size with optional settings.
+
+    Parameters:
+        input_image (PIL.Image.Image or numpy.ndarray): The input image to be resized.
+        output_size (tuple): The desired output size as a tuple (width, height).
+        interpolation (str): The interpolation method to be used. Possible values are:
+                             'nearest', 'box', 'bilinear', 'bicubic', 'hamming', 'lanczos'.
+                             Default is 'lanczos'.
+        keep_ratio (bool): Whether to maintain the aspect ratio of the input image while resizing.
+                           Default is True.
+        center_image (bool): Whether to center the resized image within the output size.
+                             Default is True.
+        background_color (tuple): The RGB color tuple for the background if the output size
+                                  is larger than the input image. Default is (0, 0, 0) (black).
+
+    Returns:
+        numpy.ndarray: The resized image as a NumPy array.
+    """
+    # Convert the np.array image into an Image.Image (PIL image)
+    if not isinstance(input_image, Image.Image):
+        input_image = Image.fromarray(np.uint8(input_image))
+
+    if keep_ratio is True:
+        width, height = input_image.size
+        width_ratio = output_size[0] / width
+        height_ratio = output_size[1] / height
+        resizing_ratio = min(width_ratio, height_ratio)
+
+        # Resize the image while maintaining aspect ratio
+        resized_image = input_image.resize((int(input_image.width * resizing_ratio),
+                                            int(input_image.height * resizing_ratio)),
+                                           pil_interp_codes[interpolation])
+
+        # Define background according to the colorspace of the image and the type of background_color parameter
+        if input_image.mode == 'RGB':
+            if isinstance(background_color, int):
+                background_color = tuple([background_color] * 3)
+            background = Image.new('RGB', output_size, background_color)
+
+        elif input_image.mode == 'L':
+            if not isinstance(background_color, int):
+                background_color = sum(list(background_color))//3
+            background = Image.new('L', output_size, background_color)
+
+        # Center the image
+        if center_image == True:
+            im_x, im_y = resized_image.size
+            paste_x = (output_size[0] - im_x) // 2
+            paste_y = (output_size[1] - im_y) // 2
+            background.paste(resized_image, (paste_x, paste_y))
+        else:
+            background.paste(resized_image)
+
+        return np.array(background)
+
+    else:
+        resized_image = input_image.resize(
+            output_size, pil_interp_codes[interpolation])
+
+        return np.array(resized_image)
 
 
 def image_flip(image: np.ndarray, direction: str) -> np.ndarray:
