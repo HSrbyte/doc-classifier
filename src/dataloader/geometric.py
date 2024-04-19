@@ -90,3 +90,25 @@ def image_rotate(
         return rotated, rotated_matrix
     else:
         return rotated
+
+
+def image_flip(image: np.ndarray, direction: str) -> np.ndarray:
+    """
+    Flip an image in the specified direction.
+
+    Parameters:
+        image (numpy.ndarray): Input image as a numpy array.
+        direction (str): Direction to flip the image.
+            Options: 'horizontal', 'vertical', 'diagonal'
+
+    Returns:
+        numpy.ndarray: Flipped image.
+    """
+    if direction == 'horizontal':
+        return np.flip(image, axis=1)
+    elif direction == 'vertical':
+        return np.flip(image, axis=0)
+    elif direction == 'diagonal':
+        return np.flipud(np.fliplr(image))
+    else:
+        raise ValueError("Invalid direction. Please choose from 'horizontal', 'vertical', or 'diagonal'.")
