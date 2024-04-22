@@ -42,6 +42,7 @@ def add_alpha_channel(img: np.ndarray,
     else:
         if len(alpha.shape) == 3:
             alpha = rgb2gray(alpha.copy())
+            alpha = alpha * opacity
     rgba_image = np.dstack((img, alpha))
     return rgba_image
 
