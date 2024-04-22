@@ -1,5 +1,7 @@
-from .dataloader.degradation import image_jpg_compress
-from .dataloader.io import image_read
+from .dataloader.colorspace import (add_alpha_channel, remove_alpha_channel,
+                                    rgb2gray, bgr2gray, gray2rgb, gray2bgr)
+from .dataloader.degradation import jpg_compress, salt_and_pepper_noise, gaussian_noise
+from .dataloader.io import image_read, image_save
 from .dataloader.geometric import image_rotate, image_flip, image_resize
 
 
@@ -51,5 +53,7 @@ __all__ = [
     "img_xml_dimension", "create_wordcloud", "detect_lang", "get_all_files_from_data_folder",
     "barplot", "bluriness", "gp_name", "extract_image_info", "img_info", "compute_color_histogram",
     "extract_document_length", "calculate_lexical_diversity", "calculate_keyword_density", "image_read",
-    "image_flip", "image_jpg_compress", "image_resize"
+    "image_flip", "jpg_compress", "image_resize", "add_alpha_channel", "remove_alpha_channel",
+    "rgb2gray", "bgr2gray", "gray2rgb", "gray2bgr", "image_save", "salt_and_pepper_noise",
+    "gaussian_noise"
 ]
