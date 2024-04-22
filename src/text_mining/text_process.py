@@ -4,10 +4,11 @@ from typing import Union, Tuple, List, Optional
 from nltk.tokenize.regexp import RegexpTokenizer
 
 from src import (image_read, read_jsonfile, tesseract_image_process, detect_lang,
-                 stop_words_filtering, lemmatize_french, lemmatize_english)
+                 stop_words_filtering, lemmatize_french, lemmatize_english, rgb2gray, gray2rgb)
 
 
 def text_pipeline(image: Union[np.ndarray, str, Path],
+                  color_mode: str,
                   common_words_data: Union[dict, str, Path],
                   tokenizer: Optional[RegexpTokenizer] = None,
                   detect_language: bool = True,
@@ -25,6 +26,7 @@ def text_pipeline(image: Union[np.ndarray, str, Path],
         image (Union[np.ndarray, str, Path]): The image from which to extract text.
             It can be a NumPy array representing the image, a string representing the path to
             the image file, or a pathlib.Path object.
+        color_mode (str): Desired color mode ('rgb' or 'gray'). Default is 'rgb'.
         common_words_data (Union[dict, str, Path]): Data containing common words for keyword
             density calculation. It can be a dictionary, a string representing the path to a
             JSON file containing the data, or a pathlib.Path object.
@@ -47,7 +49,12 @@ def text_pipeline(image: Union[np.ndarray, str, Path],
     if isinstance(image, Path):
         image = str(image)
     if isinstance(image, str):
-        image = image_read(image)
+        image = image_read(image, color_mode)
+
+    if len(image.shape) == 3 and color_mode == "gray":
+        image = rgb2gray(image)
+    elif len(image.shape) == 2 and color_mode == "rgb":
+        image = gray2rgb(image)
 
     # Check common words data
     if isinstance(common_words_data, Path):
