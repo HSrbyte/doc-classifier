@@ -1,9 +1,11 @@
+from .utils.misc import (extract_tar_gz, save_jsonfile, read_jsonfile,
+                         get_all_files_from_data_folder)
+
 from .dataloader.colorspace import (add_alpha_channel, remove_alpha_channel,
                                     rgb2gray, bgr2gray, gray2rgb, gray2bgr)
 from .dataloader.degradation import jpg_compress, salt_and_pepper_noise, gaussian_noise
 from .dataloader.io import image_read, image_save
 from .dataloader.geometric import image_rotate, image_flip, image_resize
-
 
 
 from .text_mining.nltk import stop_words_filtering
@@ -19,18 +21,11 @@ from .text_mining.text_process import (extract_document_length, calculate_lexica
 from .text_mining.xml import img_xml_unicode, img_xml_language, img_xml_dimension
 
 
-
-from .utils.misc import (extract_tar_gz, save_jsonfile, read_jsonfile,
-                         get_all_files_from_data_folder)
-
-
-
 from .visualization.visualize import (draw_tesseract_result, plot_image,
                                       image_grid_sample, create_wordcloud,
                                       barplot)
 
 from .visualization.compute_color_histogram import compute_color_histogram
-
 
 
 from .extract_info.bluriness import bluriness
@@ -40,9 +35,6 @@ from .extract_info.gp_name import gp_name
 from .extract_info.img_info import img_info
 
 from .extract_info.extract_image_info import extract_image_info
-
-
-
 
 
 __all__ = [
