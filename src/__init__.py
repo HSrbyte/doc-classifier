@@ -4,8 +4,9 @@ from .utils.misc import (extract_tar_gz, save_jsonfile, read_jsonfile,
 from .dataloader.colorspace import (add_alpha_channel, remove_alpha_channel,
                                     rgb2gray, bgr2gray, gray2rgb, gray2bgr)
 from .dataloader.degradation import jpg_compress, salt_and_pepper_noise, gaussian_noise
+from .dataloader.formatting import image_normalize, image_denormalize
 from .dataloader.io import image_read, image_save
-from .dataloader.geometric import image_rotate, image_flip, image_resize
+from .dataloader.geometric import image_rotate, image_flip, image_resize, image_merge
 
 
 from .text_mining.nltk import stop_words_filtering
@@ -47,5 +48,5 @@ __all__ = [
     "extract_document_length", "calculate_lexical_diversity", "calculate_keyword_density", "image_read",
     "image_flip", "jpg_compress", "image_resize", "add_alpha_channel", "remove_alpha_channel",
     "rgb2gray", "bgr2gray", "gray2rgb", "gray2bgr", "image_save", "salt_and_pepper_noise",
-    "gaussian_noise"
+    "gaussian_noise", "image_normalize", "image_denormalize", "image_merge"
 ]

@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 
 from PIL import Image
+from PIL import ImageEnhance
 from typing import Optional, Tuple, Union
 
 pil_interp_codes = {
@@ -193,3 +194,53 @@ def image_flip(image: np.ndarray, direction: str) -> np.ndarray:
         return np.flipud(np.fliplr(image))
     else:
         raise ValueError("Invalid direction. Please choose from 'horizontal', 'vertical', or 'diagonal'.")
+
+
+def image_merge(foreground: Union[np.ndarray, Image.Image],
+                background: Union[np.ndarray, Image.Image],
+                mask: Optional[Union[np.ndarray, Image.Image]] = None,
+                position: Tuple[int, int] = (0, 0),
+                opacity: float = 1
+                ) -> np.ndarray:
+    """
+    Merge a foreground image onto a background image with a specified opacity.
+
+    Parameters:
+    - foreground: np.array or PIL.Image.Image
+        The image to be merged onto the background.
+    - background: np.array or PIL.Image.Image
+        The background image onto which the foreground will be merged.
+    - mask: PIL.Image.Image, optional
+        A mask image to define the transparency of the foreground image.
+    - position: tuple, optional
+        The position on the background image where the top-left corner of the foreground will be placed.
+    - opacity: float, optional
+        Opacity of the foreground image. Should be between 0 and 1. Default is 1.
+
+    Returns:
+    - np.array
+        The merged image as a NumPy array.
+
+    Note:
+    - Opacity should be a float between 0 and 1, where 0 is completely transparent and 1 is completely opaque.
+    """
+
+    if not isinstance(foreground, Image.Image):
+        foreground = Image.fromarray(np.uint8(foreground))
+    if not isinstance(background, Image.Image):
+        background = Image.fromarray(np.uint8(background))
+
+    if mask is None:
+        mask = Image.new("L", foreground.size, round(opacity*255))
+    else:
+        if not isinstance(mask, Image.Image):
+            mask = Image.fromarray(np.uint8(mask))
+
+        if mask.mode != "L":
+            mask = mask.convert("L")
+
+        mask = ImageEnhance.Brightness(mask).enhance(opacity)
+
+    background.paste(foreground, position, mask)
+
+    return np.array(background)
