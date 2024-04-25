@@ -182,6 +182,8 @@ def image_flip(image: np.ndarray, direction: str) -> np.ndarray:
 
     Returns:
         numpy.ndarray: Flipped image.
+    Raises:
+        ValueError: If an invalid direction is provided.
     """
     if direction == 'horizontal':
         return np.flip(image, axis=1)
