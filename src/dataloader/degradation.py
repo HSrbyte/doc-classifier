@@ -13,7 +13,6 @@ def jpg_compress(image: np.ndarray, quality: int = 95) -> np.ndarray:
     Returns:
         numpy.ndarray: Compressed image.
     """
-    image.shape
     _, encoded_image = cv2.imencode('.jpg', image, [int(cv2.IMWRITE_JPEG_QUALITY), quality])
     if len(image.shape) == 3:
         compressed_image = cv2.imdecode(encoded_image, cv2.IMREAD_COLOR)
