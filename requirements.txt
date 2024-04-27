@@ -12,3 +12,4 @@ spacy==3.7.4
 wordcloud==1.9.3
 spacy-langdetect==0.1.2
 scikit-learn==1.4.0
+lazypredict==0.2.12
