@@ -287,6 +287,7 @@ def tesseract_image_process(
 
 def tesseract_data_process(
     data_path: str,
+    image_folder: str = 'images',
     output_path: Optional[str] = None,
     confiance: float = 0.5,
     lang_ocr: str = "eng+fra",
@@ -337,7 +338,7 @@ def tesseract_data_process(
     if not os.path.exists(out_folder):
         os.makedirs(out_folder)
 
-    images_dir = os.path.join(data_path, 'images')
+    images_dir = os.path.join(data_path, image_folder)
     all_images = os.listdir(images_dir)
     all_images.sort()
     osd_data = []
