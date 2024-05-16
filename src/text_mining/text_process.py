@@ -1,4 +1,6 @@
 import numpy as np
+import scipy.sparse as sp
+
 from pathlib import Path
 from typing import Union, Tuple, List, Optional
 from nltk.tokenize.regexp import RegexpTokenizer
@@ -6,10 +8,14 @@ from nltk.tokenize.regexp import RegexpTokenizer
 from src import (image_read, read_jsonfile, tesseract_image_process, detect_lang,
                  stop_words_filtering, lemmatize_french, lemmatize_english, rgb2gray, gray2rgb)
 
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.preprocessing import StandardScaler
+from joblib import load
+
 
 def text_pipeline(image: Union[np.ndarray, str, Path],
-                  color_mode: str,
                   common_words_data: Union[dict, str, Path],
+                  color_mode: str = 'rgb',
                   tokenizer: Optional[RegexpTokenizer] = None,
                   detect_language: bool = True,
                   language: str = "english",
@@ -153,3 +159,46 @@ def calculate_keyword_density(text: str, keywords: List[str]) -> float:
     words = text.split(' ')
     keyword_count = sum(1 for word in words if word in keywords)
     return keyword_count / len(words)
+
+
+def text_normalize(tfidf_vectorizer: Optional[Union[str, TfidfVectorizer]] = None,
+                   standard_scaler: Optional[Union[str, StandardScaler]] = None,
+                   tfidf_data: Optional[str] = None,
+                   structure_data: Optional[list] = None,
+                   ) -> np.ndarray:
+    """Normalize text and structured data using TF-IDF vectorization and standard
+    scaling.
+
+    Args:
+        tfidf_vectorizer (Optional[Union[str, TfidfVectorizer]]): A trained TF-IDF
+            vectorizer or path to the saved vectorizer.
+        standard_scaler (Optional[Union[str, StandardScaler]]): A trained
+            StandardScaler or path to the saved scaler.
+        tfidf_data (Optional[np.ndarray]): TF-IDF transformed data.
+        structure_data (Optional[np.ndarray]): Structured data.
+
+    Returns:
+        np.ndarray: Concatenated vector containing the normalized data.
+    """
+    if tfidf_vectorizer is not None:
+        if isinstance(tfidf_vectorizer, str):
+            tfidf_vectorizer = load(tfidf_vectorizer)
+        X_tfidf = tfidf_vectorizer.transform([tfidf_data])
+    else:
+        X_tfidf = None
+
+    if standard_scaler is not None:
+        if isinstance(standard_scaler, str):
+            standard_scaler = load(standard_scaler)
+        X_structure = standard_scaler.transform([structure_data])
+    else:
+        X_structure = None
+
+    if X_tfidf is not None and X_structure is not None:
+        X_structure = sp.csr_matrix(X_structure)
+        vector = sp.hstack([X_tfidf, X_structure])
+    elif X_tfidf is not None and X_structure == None:
+        vector = X_tfidf
+    else:
+        vector = X_structure
+    return vector

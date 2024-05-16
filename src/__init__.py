@@ -17,10 +17,11 @@ from .text_mining.tesseract import (tesseract_osd, tesseract_ocr, tesseract_ocr_
                                     tesseract_image_process, tesseract_data_process)
 
 from .text_mining.text_process import (extract_document_length, calculate_lexical_diversity,
-                                       calculate_keyword_density, text_pipeline)
+                                       calculate_keyword_density, text_pipeline, text_normalize)
 
 from .text_mining.xml import img_xml_unicode, img_xml_language, img_xml_dimension
 
+from .text_mining.model import TextModel
 
 from .visualization.visualize import (draw_tesseract_result, plot_image,
                                       image_grid_sample, create_wordcloud,
@@ -48,5 +49,6 @@ __all__ = [
     "extract_document_length", "calculate_lexical_diversity", "calculate_keyword_density", "image_read",
     "image_flip", "jpg_compress", "image_resize", "add_alpha_channel", "remove_alpha_channel",
     "rgb2gray", "bgr2gray", "gray2rgb", "gray2bgr", "image_save", "salt_and_pepper_noise",
-    "gaussian_noise", "image_normalize", "image_denormalize", "image_merge"
+    "gaussian_noise", "image_normalize", "image_denormalize", "image_merge", "text_normalize",
+    "TextModel"
 ]
