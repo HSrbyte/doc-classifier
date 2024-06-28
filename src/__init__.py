@@ -3,11 +3,14 @@ from .utils.misc import (extract_tar_gz, save_jsonfile, read_jsonfile,
 
 from .dataloader.colorspace import (add_alpha_channel, remove_alpha_channel,
                                     rgb2gray, bgr2gray, gray2rgb, gray2bgr)
-from .dataloader.degradation import jpg_compress, salt_and_pepper_noise, gaussian_noise
-from .dataloader.formatting import image_normalize, image_denormalize
+from .dataloader.degradation import (jpg_compress, salt_and_pepper_noise, gaussian_noise,
+                                     tf_jpg_compress, tf_gaussian_noise, tf_salt_and_pepper_noise)
+from .dataloader.formatting import image_normalize, image_denormalize, tf_image_normalize
 from .dataloader.io import image_read, image_save
-from .dataloader.geometric import image_rotate, image_flip, image_resize, image_merge
+from .dataloader.geometric import (image_rotate, image_flip, image_resize, image_merge,
+                                   tf_image_flip)
 
+from .dataloader.dataset import image_process, load_image_and_label, create_train_dataset
 
 from .text_mining.nltk import stop_words_filtering
 
@@ -28,6 +31,7 @@ from .visualization.visualize import (draw_tesseract_result, plot_image,
                                       barplot)
 
 from .visualization.compute_color_histogram import compute_color_histogram
+from .visualization.training import plot_history
 
 
 from .extract_info.bluriness import bluriness
@@ -50,5 +54,6 @@ __all__ = [
     "image_flip", "jpg_compress", "image_resize", "add_alpha_channel", "remove_alpha_channel",
     "rgb2gray", "bgr2gray", "gray2rgb", "gray2bgr", "image_save", "salt_and_pepper_noise",
     "gaussian_noise", "image_normalize", "image_denormalize", "image_merge", "text_normalize",
-    "TextModel"
+    "TextModel", "tf_image_normalize", "tf_gaussian_noise", "tf_salt_and_pepper_noise",
+    "image_process", "load_image_and_label", "create_train_dataset", "show_history"
 ]

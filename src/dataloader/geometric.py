@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import tensorflow as tf
 
 from PIL import Image
 from PIL import ImageEnhance
@@ -244,3 +245,28 @@ def image_merge(foreground: Union[np.ndarray, Image.Image],
     background.paste(foreground, position, mask)
 
     return np.array(background)
+
+
+
+def tf_image_flip(image: tf.Tensor, direction: int) -> tf.Tensor:
+    """
+    Flip an image in the specified direction.
+
+    Parameters:
+        image (numpy.ndarray): Input image as a numpy array.
+        direction (int): Direction to flip the image.
+            Options: 0:'horizontal', 1:'vertical', 2:'diagonal'
+
+    Returns:
+        numpy.ndarray: Flipped image.
+    Raises:
+        ValueError: If an invalid direction is provided.
+    """
+    if direction == 0:
+        return tf.image.flip_left_right(image)
+    elif direction == 1:
+        return tf.image.flip_up_down(image)
+    elif direction == 2:
+        return tf.image.flip_left_right(tf.image.flip_up_down(image))
+    else:
+        return image
