@@ -9,8 +9,9 @@ from .dataloader.formatting import image_normalize, image_denormalize, tf_image_
 from .dataloader.io import image_read, image_save
 from .dataloader.geometric import (image_rotate, image_flip, image_resize, image_merge,
                                    tf_image_flip)
-
-from .dataloader.dataset import image_process, load_image_and_label, create_train_dataset
+from .dataloader.dataset import (image_process_train, image_process_test, load_image_and_label_for_train,
+                                 load_image_and_label_for_test, create_train_dataset, create_test_dataset,
+                                 create_inference_dataset, inference)
 
 from .text_mining.nltk import stop_words_filtering
 
@@ -54,6 +55,8 @@ __all__ = [
     "image_flip", "jpg_compress", "image_resize", "add_alpha_channel", "remove_alpha_channel",
     "rgb2gray", "bgr2gray", "gray2rgb", "gray2bgr", "image_save", "salt_and_pepper_noise",
     "gaussian_noise", "image_normalize", "image_denormalize", "image_merge", "text_normalize",
-    "TextModel", "tf_image_normalize", "tf_gaussian_noise", "tf_salt_and_pepper_noise",
-    "image_process", "load_image_and_label", "create_train_dataset", "show_history"
+    "TextModel", "tf_image_normalize", "tf_gaussian_noise", "tf_salt_and_pepper_noise", "tf_jpg_compress",
+    "tf_image_flip", "image_process_train", "image_process_test", "load_image_and_label_for_train",
+    "load_image_and_label_for_test", "create_train_dataset", "create_test_dataset", "create_inference_dataset",
+    "plot_history", "inference"
 ]

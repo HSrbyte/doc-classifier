@@ -3,14 +3,14 @@ import random
 import numpy as np
 import tensorflow as tf
 
-from typing import Tuple
+from typing import Tuple, Union, Optional, List
 from src import (image_read, image_resize, tf_image_normalize, tf_jpg_compress,
                  tf_image_flip, tf_gaussian_noise, tf_salt_and_pepper_noise)
 
 
 
 
-def image_process(file_fath: str) -> tf.Tensor:
+def image_process_train(file_fath: str) -> tf.Tensor:
     """
     Processes an image by applying various augmentations and normalization.
 
@@ -52,7 +52,34 @@ def image_process(file_fath: str) -> tf.Tensor:
     return image
 
 
-def load_image_and_label(image_path: str, label: int) -> Tuple[tf.Tensor, int]:
+def image_process_test(file_fath: Union[str, np.ndarray]) -> tf.Tensor:
+    """
+    Processes an image by applying various augmentations and normalization.
+
+    Args:
+        file_path (str): The path to the image file.
+
+    Returns:
+        tf.Tensor: The processed image as a TensorFlow tensor.
+
+    The processing steps include:
+        1. Reading the image in either 'rgb' or 'gray' mode.
+        8. Resizing the image to 224x224 pixels.
+        9. Normalizing the image with specified mean and standard deviation.
+    """
+    if isinstance(file_fath, str):
+        image = image_read(file_fath, color_mode='rgb')
+    else:
+        image = file_fath
+    image = image_resize(image, [224, 224])
+    image = tf.convert_to_tensor(image, dtype=tf.float32)
+    image = tf_image_normalize(image,
+                            mean = [176.83188398, 177.25901738, 177.25890556],
+                            std = [110.50753887, 110.49521524, 110.50979735])
+    return image
+
+
+def load_image_and_label_for_train(image_path: str, label: int) -> Tuple[tf.Tensor, int]:
     """
     Loads an image and its corresponding label.
 
@@ -61,28 +88,58 @@ def load_image_and_label(image_path: str, label: int) -> Tuple[tf.Tensor, int]:
         label (int): The label associated with the image.
 
     Returns:
-        Tuple[tf.Tensor, int]: A tuple containing the processed image as a TensorFlow tensor and the label as an integer tensor.
+        Tuple[tf.Tensor, int]: A tuple containing the processed image as a
+            TensorFlow tensor and the label as an integer tensor.
 
     This function:
         1. Decodes the image path from bytes to a string.
-        2. Processes the image using the image_process function.
+        2. Processes the image using the image_process_train function.
         3. Converts the label to a TensorFlow tensor.
     """
     image_path = image_path.numpy().decode('utf-8')
-    image = image_process(image_path)
+    image = image_process_train(image_path)
     image = tf.convert_to_tensor(image, dtype=tf.float32)
     label = tf.constant([np.array(label)], tf.int32)
     return image, label
 
 
+def load_image_and_label_for_test(image_path: str,
+                                  label: Optional[int] = None
+                                  ) -> Union[Tuple[tf.Tensor, int], tf.Tensor]:
+    """
+    Loads an image and its corresponding label if it is not None.
+
+    Args:
+        image_path (str): The path to the image file.
+        label (int): The label associated with the image.
+
+    Returns:
+        Union[Tuple[tf.Tensor, int], tf.Tensor]: A tuple containing
+            the processed image as a TensorFlow tensor and the label
+            as an integer tensor. Or the processed image if lables is None.
+
+    This function:
+        1. Decodes the image path from bytes to a string.
+        2. Processes the image using the image_process_test function.
+        3. Converts the label to a TensorFlow tensor.
+    """
+    image_path = image_path.numpy().decode('utf-8')
+    image = image_process_test(image_path)
+    image = tf.convert_to_tensor(image, dtype=tf.float32)
+    if label is not None:
+        label = tf.constant([np.array(label)], tf.int32)
+        return image, label
+    else:
+        return image
+
+
 def create_train_dataset(X, Y, batch_size: int = 32) -> tf.data.Dataset:
     """
-    Creates a TensorFlow dataset from image paths and labels.
+    Creates a TensorFlow train dataset from image paths and labels.
 
     Args:
         X (list): A list of image paths.
         Y (list): A list of labels corresponding to the images.
-        load_function (callable): A function to load and process images and labels.
         batch_size (int, optional): The number of samples per batch. Defaults to 32.
 
     Returns:
@@ -96,9 +153,77 @@ def create_train_dataset(X, Y, batch_size: int = 32) -> tf.data.Dataset:
         5. Prefetches batches for efficient loading.
     """
     dataset = tf.data.Dataset.from_tensor_slices((X, Y))
-    dataset = dataset.map(lambda x, y: tf.py_function(load_image_and_label, [x, y], [tf.float32, tf.int32]), num_parallel_calls=tf.data.AUTOTUNE)
+    dataset = dataset.map(lambda x, y: tf.py_function(load_image_and_label_for_train, [x, y], [tf.float32, tf.int32]), num_parallel_calls=tf.data.AUTOTUNE)
     dataset = dataset.map(lambda image, label: (tf.ensure_shape(image, (224, 224, 3)), tf.ensure_shape(label, (1,))))
     dataset = dataset.batch(batch_size)
     dataset = dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
-
     return dataset
+
+
+def create_test_dataset(X, Y, batch_size: int = 32):
+    """
+    Creates a TensorFlow test dataset from image paths and labels.
+
+    Args:
+        X (list): A list of image paths.
+        Y (list): A list of labels corresponding to the images.
+        batch_size (int, optional): The number of samples per batch. Defaults to 32.
+
+    Returns:
+        tf.data.Dataset: A TensorFlow dataset with batches of images and labels.
+
+    This function:
+        1. Creates a TensorFlow dataset from the image paths and labels.
+        2. Maps the load_function onto the dataset to process the images and labels.
+        3. Ensures the shape of the images and labels.
+        4. Batches the dataset.
+        5. Prefetches batches for efficient loading.
+    """
+    dataset = tf.data.Dataset.from_tensor_slices((X, Y))
+    dataset = dataset.map(lambda x, y: tf.py_function(load_image_and_label_for_test, [x, y], [tf.float32, tf.int32]), num_parallel_calls=tf.data.AUTOTUNE)
+    dataset = dataset.map(lambda image, label: (tf.ensure_shape(image, (224, 224, 3)), tf.ensure_shape(label, (1,))))
+    dataset = dataset.batch(batch_size)
+    dataset = dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
+    return dataset
+
+
+def create_inference_dataset(X, batch_size: int = 32):
+    """
+    Creates a TensorFlow test dataset from image paths.
+
+    Args:
+        X (list): A list of image paths.
+        batch_size (int, optional): The number of samples per batch. Defaults to 32.
+
+    Returns:
+        tf.data.Dataset: A TensorFlow dataset with batches of images.
+
+    This function:
+        1. Creates a TensorFlow dataset from the image paths and labels.
+        2. Maps the load_function onto the dataset to process the images and labels.
+        3. Ensures the shape of the images and labels.
+        4. Batches the dataset.
+        5. Prefetches batches for efficient loading.
+    """
+    X = [X] if not isinstance(X, list) else X
+    dataset = tf.data.Dataset.from_tensor_slices(X)
+    dataset = dataset.map(lambda x: tf.py_function(load_image_and_label_for_test, [x], [tf.float32]), num_parallel_calls=tf.data.AUTOTUNE)
+    dataset = dataset.map(lambda image: (tf.ensure_shape(image, (224, 224, 3))))
+    dataset = dataset.batch(batch_size)
+    dataset = dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
+    return dataset
+
+
+def inference(model, images: List[Union[str, np.ndarray]], batch_size: int = 1) -> str:
+    cat_dict = {
+        0: "email",
+        1: "handwritten",
+        2: "invoice",
+        3: "national_identity_card",
+        4: "passeport",
+        5: "scientific_publication"
+    }
+    dataset = create_inference_dataset(images, batch_size)
+    predict = model.predict(dataset)
+    result = cat_dict[predict.argmax(axis = 1)[0]]
+    return result
