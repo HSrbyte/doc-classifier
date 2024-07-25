@@ -225,5 +225,5 @@ def inference(model, images: List[Union[str, np.ndarray]], batch_size: int = 1) 
     }
     dataset = create_inference_dataset(images, batch_size)
     predict = model.predict(dataset)
-    result = cat_dict[predict.argmax(axis = 1)[0]]
+    result = [cat_dict[pred] for pred in predict.argmax(axis = 1)]
     return result
