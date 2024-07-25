@@ -299,3 +299,76 @@ def create_wordcloud(tokens: List[str],
     plt.show()
 
     return wc
+
+
+def plot_search_results(
+    cv_results: dict,
+    best_params: dict,
+    param_grid: dict,
+    title: str) -> None:
+    """Plots the search results from a cross-validation grid search.
+
+    This function visualizes the mean test scores and their standard deviations
+    for each parameter in the parameter grid that has more than one value. It
+    highlights the performance of the best parameters obtained from the grid
+    search.
+
+    Args:
+        cv_results (dict): The cross-validation results containing mean and standard
+                           deviation of test scores for different parameter
+                           combinations. This is typically the `cv_results_`
+                           attribute of a fitted GridSearchCV object.
+        best_params (dict): The best parameters found by the grid search. This
+                            corresponds to the `best_params_` attribute of a
+                            fitted GridSearchCV object.
+        param_grid (dict): The parameter grid used for the grid search. This is
+                           the same as the parameter grid passed to the GridSearchCV.
+        title (str): The title for the plot.
+    """
+    masks_names = [k for k, v in param_grid.items() if len(v) > 1]
+    if not isinstance(cv_results, pd.DataFrame):
+        cv_results = pd.DataFrame(cv_results)
+
+    plot_results = {}
+    for pk, pv in best_params.items():
+        if pk not in masks_names:
+            param_grid.pop(pk)
+            continue
+        plot_results[pk] = [[], [], []]
+        for val in param_grid[pk]:
+            if val != None:
+                res_param = cv_results[cv_results[f'param_{pk}'] == val]
+            else:
+                res_param = cv_results.loc[cv_results[f'param_{pk}'].isnull()]
+
+            id_ = res_param['mean_test_score'].idxmax()
+
+            if pd.isna(id_):
+                plot_results[pk][0].append(str(val))
+                plot_results[pk][1].append(0.0)
+                plot_results[pk][2].append(0.0)
+            else:
+                row = cv_results.iloc[id_]
+                mean_test_score = row['mean_test_score']
+                std_test_score = row['std_test_score']
+                plot_results[pk][0].append(str(val))
+                plot_results[pk][1].append(mean_test_score)
+                plot_results[pk][2].append(std_test_score)
+
+    ## Ploting results
+    fig, ax = plt.subplots(1, len(plot_results), sharex='none', sharey='all', figsize=(20, 5))
+
+    fig.suptitle(title+'\nScore per parameter')
+    fig.text(0.04, 0.5, 'MEAN SCORE', va='center', rotation='vertical')
+    for i, [name, values] in enumerate(plot_results.items()):
+        x = np.array(values[0])
+        y_1 = np.array(values[1])
+        e_1 = np.array(values[2])
+        if len(plot_results) == 1:
+            ax.errorbar(x, y_1, e_1, linestyle='--', marker='o', label='test')
+            ax.set_xlabel(name.upper())
+        else:
+            ax[i].errorbar(x, y_1, e_1, linestyle='--', marker='o', label='test')
+            ax[i].set_xlabel(name.upper())
+    plt.legend()
+    plt.show()

@@ -1,5 +1,5 @@
 from .utils.misc import (extract_tar_gz, save_jsonfile, read_jsonfile,
-                         get_all_files_from_data_folder)
+                         get_all_files_from_data_folder, Encoder)
 
 from .dataloader.colorspace import (add_alpha_channel, remove_alpha_channel,
                                     rgb2gray, bgr2gray, gray2rgb, gray2bgr)
@@ -29,7 +29,7 @@ from .text_mining.model import TextModel
 
 from .visualization.visualize import (draw_tesseract_result, plot_image,
                                       image_grid_sample, create_wordcloud,
-                                      barplot)
+                                      barplot, plot_search_results)
 
 from .visualization.compute_color_histogram import compute_color_histogram
 from .visualization.training import plot_history
@@ -58,5 +58,5 @@ __all__ = [
     "TextModel", "tf_image_normalize", "tf_gaussian_noise", "tf_salt_and_pepper_noise", "tf_jpg_compress",
     "tf_image_flip", "image_process_train", "image_process_test", "load_image_and_label_for_train",
     "load_image_and_label_for_test", "create_train_dataset", "create_test_dataset", "create_inference_dataset",
-    "plot_history", "inference"
+    "plot_history", "inference", "Encoder", "plot_search_results"
 ]

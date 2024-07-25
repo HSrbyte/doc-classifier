@@ -1,7 +1,7 @@
 import os
 import json
 import tarfile
-
+import numpy as np
 from typing import Union, List
 
 
@@ -87,3 +87,19 @@ def get_all_files_from_data_folder(
     all_files_paths = [os.path.join(data_path, filename) \
         for filename in all_filesnames]
     return all_files_paths
+
+
+class Encoder(json.JSONEncoder):
+    def default(self, obj):
+
+        # Polygon or array convert to list
+        if isinstance(obj, (np.ndarray)):
+            return obj.tolist()
+
+        # int32 convert to int
+        if isinstance(obj, (np.int32)):
+            return int(obj)
+
+        return super().default(obj)
+
+
