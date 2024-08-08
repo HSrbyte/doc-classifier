@@ -1,21 +1,38 @@
 # doc-classifier
-Projet de classification de documents avec la formation DataScientest (novembre 2023).
+Projet de classification de documents dans le cadre de la formation DataScientest (novembre 2023). Le projet est divisé en plusieurs étapes, chacune documentée dans plusieurs notebooks :
+
+### 1 - Analyse exploratoire des datasets (notebooks 00 à 05):
+Cette étape inclut la compréhension et l'analyse initiale des jeux de données, avec des visualisations et des statistiques descriptives pour préparer les étapes suivantes.
+
+### 2 - Première modélisation : Classification des données textuelles (notebooks 06 à 11):
+Utilisation de Tesseract pour l'extraction de texte à partir des documents, suivie d'une classification basée sur les données textuelles. Les modèles développés dans cette phase sont principalement axés sur le traitement du langage naturel (NLP).
+
+### 3 - Deuxième modélisation : Classification des images (notebooks 12 à 19):
+Application de techniques de Deep Learning pour la classification des documents basée sur les images. Cette étape comprend le prétraitement des images, la conception des modèles de réseaux de neurones convolutifs (CNN), et l'évaluation des performances des modèles.
+
+
+### Organisation des fichiers
+
+- [notebooks/](notebooks/)
+Ce dossier contient tous les notebooks détaillant les différentes étapes du projet, du nettoyage des données à la modélisation finale.
+
+- [reports/](reports/)
+Le rapport final du projet se trouve dans ce dossier. Il contient une synthèse de toutes nos analyses et conclusions.
+
+- [models/](models/)
+Ce dossier doit contenir tous les modèles pré-entraînés. Vous pouvez télécharger tous les modèles pré-entraînés utilisés dans ce projet via le lien suivant : [Google Drive](https://drive.google.com/drive/folders/1Nni1RCqoR4cPTvxcwLCgCB0zghz5uBhi?usp=sharing)
 
 
 
 ## 🛠️ Installation
 
-Download Git project:
+Télécharger le projet Git :
 ```shell
 git clone https://github.com/Scientest23/doc-classifier
 cd doc-classifier
-
-# User config :
-git config user.name "YourName"
-git config user.email "YourEmail"
 ```
 
-Create python environnement :
+Créer un environnement python :
 ```shell
 # Windows:
 python -m venv .venv
