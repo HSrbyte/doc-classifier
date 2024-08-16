@@ -14,3 +14,4 @@ spacy-langdetect==0.1.2
 scikit-learn==1.4.0
 git+https://github.com/JSchoeck/lazypredict.git@fix-deprecated-keyword-sparse
 tensorflow==2.9.1
+streamlit==1.37.1
