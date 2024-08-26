@@ -1,6 +1,6 @@
 from src import text_pipeline, text_normalize, read_jsonfile
 
-from typing import Optional, Union, Dict
+from typing import Optional, Union, Dict, List
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import StandardScaler
 from joblib import load
@@ -88,14 +88,14 @@ class TextModel:
         Returns:
             np.ndarray: The preprocessed text vector.
         """
-        words, words_structure = text_pipeline(file, self.common_words)
+        self.words, self.words_structure, self.ocr_result, self.osd_result = text_pipeline(file, self.common_words, return_tesseract_dataframe=True)
 
         if self._tfidf is not None and self.scaler is not None:
-            vector = text_normalize(self.tfidf, self.scaler, words, words_structure)
+            vector = text_normalize(self.tfidf, self.scaler, self.words, self.words_structure)
         elif self._tfidf is not None:
-            vector = text_normalize(self.tfidf, None, words, None)
+            vector = text_normalize(self.tfidf, None, self.words, None)
         else:
-            vector = text_normalize(None, self.scaler, None, words_structure)
+            vector = text_normalize(None, self.scaler, None, self.words_structure)
 
         return vector
 
@@ -111,3 +111,8 @@ class TextModel:
         vector = self.preprocess(file)
         result = self.model.predict(vector)
         return self.categories[result[0]]
+
+    def predict_proba(self, file: Union[Path, str, np.ndarray]) -> List[float]:
+        vector = self.preprocess(file)
+        result = self.model.predict_proba(vector)
+        return result

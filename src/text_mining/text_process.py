@@ -19,8 +19,8 @@ def text_pipeline(image: Union[np.ndarray, str, Path],
                   tokenizer: Optional[RegexpTokenizer] = None,
                   detect_language: bool = True,
                   language: str = "english",
-                  keyword_density_lenght: List[int] = [5, 10, 25, 50]
-                  ) -> Tuple[str, List[float]]:
+                  keyword_density_lenght: List[int] = [5, 10, 25, 50],
+                  return_tesseract_dataframe: bool = False) -> Tuple[str, List[float]]:
     """Performs preprocessing on text extracted from an image.
 
     This function applies several preprocessing steps on the text extracted from an image,
@@ -104,8 +104,10 @@ def text_pipeline(image: Union[np.ndarray, str, Path],
             words = [w[0] for w in common_words_data[category][:k]]
             density = calculate_keyword_density(text, words)
             text_structure.append(density)
-
-    return text, text_structure
+    if not return_tesseract_dataframe:
+        return text, text_structure
+    else:
+        return text, text_structure, ocr_result, osd_result
 
 
 def extract_document_length(text: str) -> int:

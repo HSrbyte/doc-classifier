@@ -271,6 +271,7 @@ def tesseract_image_process(
                                 timeout_osd,
                                 show_errors=show_errors)
 
+    osd_result['is_rotated'] = False
     if osd_result['rotate'] != 0:
         image_rot = image_rotate(image, osd_result['rotate'], auto_bound=True)
         ocr_result_rot = tesseract_ocr(image_rot,
@@ -281,6 +282,7 @@ def tesseract_image_process(
         ocr_result_rot = tesseract_ocr_postprocess(ocr_result_rot, confiance)
         if ocr_result_rot.size > ocr_result.size:
             ocr_result = ocr_result_rot
+            osd_result['is_rotated'] = True
 
     return ocr_result, osd_result
 

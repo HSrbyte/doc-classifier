@@ -123,7 +123,10 @@ def load_image_and_label_for_test(image_path: str,
         2. Processes the image using the image_process_test function.
         3. Converts the label to a TensorFlow tensor.
     """
-    image_path = image_path.numpy().decode('utf-8')
+    if isinstance(image_path, str):
+        image_path = image_path.numpy().decode('utf-8')
+    else:
+        image_path = image_path.numpy()
     image = image_process_test(image_path)
     image = tf.convert_to_tensor(image, dtype=tf.float32)
     if label is not None:
@@ -214,7 +217,10 @@ def create_inference_dataset(X, batch_size: int = 32):
     return dataset
 
 
-def inference(model, images: List[Union[str, np.ndarray]], batch_size: int = 1) -> str:
+def inference(model,
+              images: List[Union[str, np.ndarray]],
+              batch_size: int = 1,
+              return_predictions: bool = False) -> str:
     cat_dict = {
         0: "email",
         1: "handwritten",
@@ -225,5 +231,7 @@ def inference(model, images: List[Union[str, np.ndarray]], batch_size: int = 1) 
     }
     dataset = create_inference_dataset(images, batch_size)
     predict = model.predict(dataset)
+    if return_predictions:
+        return predict
     result = [cat_dict[pred] for pred in predict.argmax(axis = 1)]
     return result
