@@ -123,9 +123,9 @@ def load_image_and_label_for_test(image_path: str,
         2. Processes the image using the image_process_test function.
         3. Converts the label to a TensorFlow tensor.
     """
-    if isinstance(image_path, str):
+    try:
         image_path = image_path.numpy().decode('utf-8')
-    else:
+    except:
         image_path = image_path.numpy()
     image = image_process_test(image_path)
     image = tf.convert_to_tensor(image, dtype=tf.float32)
