@@ -1,3 +1,4 @@
+import gc
 import cv2
 import time
 import numpy as np
@@ -23,7 +24,7 @@ default_categories: Dict[int, str] = {
 
 layers_gradcam: Dict[str, str] = {
     "CNN": "conv2d_2",
-    "SqueezNet": "conv2d_25",
+    "SqueezeNet": "conv2d_25",
     "MobileNetV2": "Conv_1_bn",
     "EfficientNet": "top_conv",
     "ResNet50": "conv5_block3_out",
@@ -31,7 +32,7 @@ layers_gradcam: Dict[str, str] = {
 
 base_models: Dict[str, Optional[str]] = {
     "CNN": "conv2d_2",
-    "SqueezNet": None,
+    "SqueezeNet": None,
     "MobileNetV2": None,
     "EfficientNet": "efficientnetb1",
     "ResNet50": "resnet50",
@@ -70,7 +71,7 @@ def load_text_model(text_methode: str, text_model_name: str) -> TextModel:
     return TextModel(text_model_path, tfidf, standard_scaler, common_words)
 
 
-def load_image_model(model_path: str, device: str) -> tf.keras.models:
+def load_image_model(model_path: str, device: str):
     with tf.device(device):
         model = load_model(model_path)
     return model
@@ -174,7 +175,7 @@ text_model_name = st.sidebar.selectbox("Sélectionner le modèle de texte",
      "RandomForestClassifier", "XGBClassifier", "VotingClassifier"),
 )
 if text_model_name in ["NearestCentroid", "VotingClassifier"]:
-    st.sidebar.warning("Please note this model cannot predict class probabilities.")
+    st.sidebar.warning("Ce modèle ne peut pas prédire les probabilités de classe.")
 
 text_methode = st.sidebar.selectbox("Sélectionner la méthode",
     ("Text & Structure", "Text", "Structure"),
@@ -201,10 +202,11 @@ image_model_path = f"models/{dict_image_model[image_model_name]}"
 # Select device:
 st.sidebar.divider()
 device_option = st.sidebar.selectbox("Select device:", ("CPU", "GPU"))
-if device_option == "GPU":
-    device = "/GPU:0"
+device = tf.config.list_logical_devices(device_option)
+if device_option == "GPU" and device:
+    device = device[0].name
 else:
-    device = "/CPU:0"
+    device = tf.config.list_logical_devices("CPU")[0].name
 
 # -------------------------------------------------------------------------------------------------
 # Load Models:
@@ -233,8 +235,11 @@ with tab1:
     with col1:
         predict_button = st.button("Predict", key="red_button", type='primary')
 
+    if predict_button and uploaded_image is None:
+        st.warning("Importez une image")
+
     with col2:
-        if is_text_model and predict_button:
+        if is_text_model and predict_button and uploaded_image is not None:
             with st.spinner(f"{text_model_name} inference..."):
                 t0 = time.time()
                 if text_model_name not in ["NearestCentroid", "VotingClassifier"]:
@@ -251,19 +256,22 @@ with tab1:
         else:
             result_text = None
 
-        if is_image_model and predict_button:
+        if is_image_model and predict_button and uploaded_image is not None:
             with st.spinner(f"{image_model_name} inference..."):
-                t0 = time.time()
-                result_image = inference(image_model, [image], return_predictions=True)
-                time_infer_image = time.time() - t0
+                result_image, time_infer_image = inference(image_model, [image],
+                                                        return_predictions=True,
+                                                        return_time_infer=True,
+                                                        device=device)
             print("Pred image:", result_image[0])
             layer_name = layers_gradcam[image_model_name]
             base_model = base_models[image_model_name]
             if base_model is not None:
                 base_model = image_model.get_layer(base_model)
             image_gradcam = grad_cam(image, layer_name, image_model, base_model)
+
         else:
             result_image = None
+        
 
     colA, colB = st.columns(2)
     if uploaded_image is not None:
@@ -302,7 +310,7 @@ with tab1:
                     st.warning(_txt_im)
                 else:
                     st.error(_txt_im)
-                st.write(f"Temps d'inférence time: {time_infer_image:.02f}s")
+                st.write(f"Temps d'inférence: {time_infer_image:.02f}s")
 
     if result_text is not None or result_image is not None:
         st.divider()
@@ -347,9 +355,17 @@ with tab2:
 with tab3:
     if result_image is not None:
         st.header(f"{image_model_name} Prédictions:")
-        st_plot(None, result_image[0], None, image_model_name)
+        st_plot(None, result_image, None, image_model_name)
         st.divider()
         st.header("Gradcam:")
         if is_image_model and result_image is not None:
             image_gradcam = cv2.resize(image_gradcam, (int(512/h*w), 512))
             st.image(image_gradcam, channels="BGR", caption='Image', use_column_width=False)
+
+
+# Clear GPU memory
+if st.sidebar.button("Vider le cache", key="red", type='secondary'):
+    st.cache_data.clear()
+    st.cache_resource.clear()
+    tf.keras.backend.clear_session()
+    gc.collect()

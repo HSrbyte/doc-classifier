@@ -1,4 +1,5 @@
 import cv2
+import time
 import random
 import numpy as np
 import tensorflow as tf
@@ -220,7 +221,9 @@ def create_inference_dataset(X, batch_size: int = 32):
 def inference(model,
               images: List[Union[str, np.ndarray]],
               batch_size: int = 1,
-              return_predictions: bool = False) -> str:
+              return_predictions: bool = False,
+              return_time_infer: bool = False,
+              device: Optional[str] = None) -> str:
     cat_dict = {
         0: "email",
         1: "handwritten",
@@ -229,9 +232,17 @@ def inference(model,
         4: "passeport",
         5: "scientific_publication"
     }
+    if device is None:
+        device = tf.config.list_logical_devices("CPU")[0].name
     dataset = create_inference_dataset(images, batch_size)
-    predict = model.predict(dataset)
-    if return_predictions:
+    t0 = time.time()
+    with tf.device(device):
+        predict = model.predict(dataset)
+    process_time = time.time() - t0
+    if not return_predictions:
+        predict = [cat_dict[pred] for pred in predict.argmax(axis = 1)]
+
+    if return_time_infer:
+        return predict, process_time
+    else:
         return predict
-    result = [cat_dict[pred] for pred in predict.argmax(axis = 1)]
-    return result
