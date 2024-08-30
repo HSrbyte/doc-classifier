@@ -116,7 +116,7 @@ if page == pages[1]:
                 with tab_model[i]:
                     # Define the file path for the confusion matrix CSV
                     # file_path = f"results/confusion_matrix_{name}.csv"
-                    file_path = f'references\{name}\confusion_matrix_{name}'
+                    file_path = f'references/{name}/confusion_matrix_{name}'
 
                     # Read the CSV into a DataFrame
                     df = pd.read_csv(file_path)
@@ -142,7 +142,7 @@ if page == pages[1]:
         st.header("Précisions des modèles")
 
         df = pd.read_csv(
-            r"results\category_accuracies_summary.csv", index_col=0)
+            r"references/category_accuracies_summary.csv", index_col=0)
         df = df.loc[options]
 
         # Set the index to the first column (document types) and transpose the DataFrame
@@ -192,7 +192,7 @@ if page == pages[1]:
                 ''')
 
         df_perf = pd.read_csv(
-            "results\prediction_performance.csv", index_col=0)
+            "references/prediction_performance.csv", index_col=0)
         st.dataframe(df_perf.loc[options])
 
     else:
@@ -215,7 +215,7 @@ if page == pages[2]:
             f'Analyse des erreurs de prédiction du modèle {options} pour la classe "{selected_doc}" :')
 
         df_wrong_pred = pd.read_csv(
-            f"references\{options}\wrong_predictions_{options}")
+            f"references/{options}/wrong_predictions_{options}")
 
         subset = df_wrong_pred[df_wrong_pred["Classe réelle"] == selected_doc]
 
@@ -252,7 +252,7 @@ if page == pages[2]:
         st.markdown('Images originales')
 
         # Define the directory and pattern for the files
-        file_pattern_originale = fr'references\{options}\originals\original_{options}_{selected_doc}_*.jpg'
+        file_pattern_originale = fr'references/{options}/originals/original_{options}_{selected_doc}_*.jpg'
         # List all files matching the pattern
         matching_files_originales = glob.glob(file_pattern_originale)
 
@@ -273,7 +273,7 @@ if page == pages[2]:
 
         st.markdown("Image GradCam")
         # Define the directory and pattern for the files
-        file_pattern_heatmap = fr'references\{options}\heatmaps\heatmap_{options}_{selected_doc}_*.jpg'
+        file_pattern_heatmap = fr'references/{options}/heatmaps/heatmap_{options}_{selected_doc}_*.jpg'
         # List all files matching the pattern
         matching_files_heatmaps = glob.glob(file_pattern_heatmap)
 
