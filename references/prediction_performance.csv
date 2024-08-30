@@ -1,0 +1,6 @@
+"Modèle","Temps de prédiction moyen CPU (s)","Temps de prédiction moyen GPU (s)","Précision moyenne (%)"
+MobileNetV2,0.229,0.226,98.2
+ResNet50,0.239,0.241,99.1
+EfficientNetB1,0.246,0.244,98.4
+CNN,0.182,0.184,95.7
+SqueezeNet,0.213,0.207,95.1

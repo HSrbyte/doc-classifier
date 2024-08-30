@@ -1,0 +1,77 @@
+image_path,Classe réelle,Classe prédite
+data/raw/data_04/a4_cni\image_0000348.jpg,ID Card,Passeport
+data/raw/data_03/images\image_0302347.tif,Email,Scientific publication
+data/raw/data_03/images\image_0040844.tif,Email,Scientific publication
+data/raw/data_03/images\image_0234320.tif,Scientific publication,Email
+data/raw/data_03/images\image_0234816.tif,Scientific publication,Invoice
+data/raw/data_04/a4_passport\image_0001489.jpg,Passeport,ID Card
+data/raw/data_03/images\image_0240956.tif,Handwritten,Scientific publication
+data/raw/data_03/images\image_0308679.tif,Invoice,Email
+data/raw/data_03/images\image_0275084.tif,Scientific publication,Invoice
+data/raw/data_03/images\image_0271135.tif,Email,Invoice
+data/raw/data_03/images\image_0346794.tif,Scientific publication,Invoice
+data/raw/data_04/a4_passport\image_0000618.jpg,Passeport,ID Card
+data/raw/data_01/images\image_0000023.tif,Invoice,Email
+data/raw/data_03/images\image_0094516.tif,Scientific publication,Invoice
+data/raw/data_03/images\image_0297426.tif,Handwritten,Invoice
+data/raw/data_03/images\image_0153544.tif,Handwritten,Invoice
+data/raw/data_03/images\image_0012370.tif,Invoice,Scientific publication
+data/raw/data_03/images\image_0095444.tif,Invoice,Scientific publication
+data/raw/data_03/images\image_0049984.tif,Invoice,Email
+data/raw/data_03/images\image_0360749.tif,Email,Invoice
+data/raw/data_04/a4_cni\image_0001399.jpg,ID Card,Passeport
+data/raw/data_03/images\image_0318960.tif,Invoice,Email
+data/raw/data_03/images\image_0278969.tif,Scientific publication,Email
+data/raw/data_03/images\image_0292300.tif,Handwritten,Invoice
+data/raw/data_03/images\image_0395015.tif,Invoice,Handwritten
+data/raw/data_03/images\image_0059795.tif,Scientific publication,Invoice
+data/raw/data_03/images\image_0157556.tif,Email,Scientific publication
+data/raw/data_04/a4_cni\image_0000524.jpg,ID Card,Passeport
+data/raw/data_03/images\image_0316374.tif,Scientific publication,Invoice
+data/raw/data_03/images\image_0259086.tif,Invoice,Handwritten
+data/raw/data_03/images\image_0037390.tif,Handwritten,Email
+data/raw/data_03/images\image_0325176.tif,Email,Scientific publication
+data/raw/data_03/images\image_0110535.tif,Invoice,Handwritten
+data/raw/data_03/images\image_0176226.tif,Email,Scientific publication
+data/raw/data_03/images\image_0377399.tif,Invoice,Scientific publication
+data/raw/data_03/images\image_0276198.tif,Email,Handwritten
+data/raw/data_03/images\image_0007050.tif,Scientific publication,Invoice
+data/raw/data_03/images\image_0186296.tif,Invoice,Email
+data/raw/data_03/images\image_0333440.tif,Invoice,Handwritten
+data/raw/data_04/a4_passport\image_0000868.jpg,Passeport,ID Card
+data/raw/data_03/images\image_0146094.tif,Scientific publication,Invoice
+data/raw/data_03/images\image_0344138.tif,Handwritten,Scientific publication
+data/raw/data_03/images\image_0017220.tif,Handwritten,Invoice
+data/raw/data_03/images\image_0221690.tif,Email,Scientific publication
+data/raw/data_03/images\image_0346061.tif,Scientific publication,Invoice
+data/raw/data_03/images\image_0274810.tif,Invoice,Scientific publication
+data/raw/data_03/images\image_0046330.tif,Handwritten,Invoice
+data/raw/data_03/images\image_0237220.tif,Invoice,Handwritten
+data/raw/data_03/images\image_0294368.tif,Scientific publication,Email
+data/raw/data_03/images\image_0000644.tif,Scientific publication,Invoice
+data/raw/data_03/images\image_0055942.tif,Invoice,Handwritten
+data/raw/data_03/images\image_0330514.tif,Handwritten,Email
+data/raw/data_03/images\image_0212600.tif,Handwritten,Invoice
+data/raw/data_03/images\image_0184508.tif,Handwritten,Email
+data/raw/data_03/images\image_0087975.tif,Scientific publication,Invoice
+data/raw/data_03/images\image_0197207.tif,Handwritten,Scientific publication
+data/raw/data_03/images\image_0266312.tif,Scientific publication,Invoice
+data/raw/data_03/images\image_0255669.tif,Handwritten,Email
+data/raw/data_03/images\image_0374363.tif,Scientific publication,Email
+data/raw/data_03/images\image_0198504.tif,Scientific publication,Email
+data/raw/data_03/images\image_0140861.tif,Email,Handwritten
+data/raw/data_03/images\image_0333502.tif,Email,Invoice
+data/raw/data_03/images\image_0075356.tif,Invoice,Handwritten
+data/raw/data_03/images\image_0302664.tif,Handwritten,Invoice
+data/raw/data_03/images\image_0124660.tif,Handwritten,Invoice
+data/raw/data_01/images\image_0000031.tif,Invoice,Handwritten
+data/raw/data_03/images\image_0358859.tif,Scientific publication,Email
+data/raw/data_03/images\image_0208609.tif,Scientific publication,Invoice
+data/raw/data_03/images\image_0248279.tif,Invoice,Email
+data/raw/data_03/images\image_0197188.tif,Handwritten,Invoice
+data/raw/data_03/images\image_0252783.tif,Invoice,Scientific publication
+data/raw/data_03/images\image_0085619.tif,Invoice,ID Card
+data/raw/data_03/images\image_0220940.tif,Invoice,Handwritten
+data/raw/data_01/images\image_0000247.tif,Invoice,Email
+data/raw/data_04/a4_cni\image_0000173.jpg,ID Card,Passeport
+data/raw/data_03/images\image_0093297.tif,Invoice,Scientific publication
