@@ -262,7 +262,7 @@ if page == pages[2]:
 
         groups_originales = []
         for a in range(0, len(matching_files_originales), 4):
-            groups_originales.append(matching_files_originales[i:i+n])
+            groups_originales.append(matching_files_originales[a:a+4])
 
         cols_originales = st.columns(4)
         for group in groups_originales:
@@ -283,7 +283,7 @@ if page == pages[2]:
 
         groups_heatmaps = []
         for b in range(0, len(matching_files_heatmaps), 4):
-            groups_heatmaps.append(matching_files_heatmaps[i:i+n])
+            groups_heatmaps.append(matching_files_heatmaps[b:b+4])
 
         cols_heatmaps = st.columns(4)
         for group in groups_heatmaps:
@@ -293,8 +293,6 @@ if page == pages[2]:
                 cols_heatmaps[b].image(
                     image_grid_sample(
                         [img_b], 1, 1, square_size=600, img_layout='center', seed=42))
-
-        st.write(matching_files_heatmaps)
 
     else:
         st.markdown("Choisir au moins un modèle")
