@@ -103,9 +103,7 @@ if page == pages[1]:
         st.divider()
 
         st.header("Les matrices de confusions")
-        st.write('''
-                Test text
-            ''')
+
         label_axis = ["Email", "Handwritten", "Invoice",
                       "ID Card", "Passeport", "Scientific publication"]
 
@@ -142,9 +140,7 @@ if page == pages[1]:
         st.divider()
 
         st.header("Précisions des modèles")
-        st.write('''
-                    Test text
-                ''')
+
         df = pd.read_csv(
             r"results\category_accuracies_summary.csv", index_col=0)
         df = df.loc[options]
