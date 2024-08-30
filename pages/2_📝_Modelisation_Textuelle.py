@@ -115,7 +115,7 @@ with tabs[0]:
     """)
     
     # Affichage de l'image
-    image_path = "references/préparation données textuelle.jpeg"
+    image_path = "references/preparation_donnees_textuelle.jpeg"
     st.image(image_path, caption="Préparation des données textuelles", use_column_width=True)
     
     st.write("""
@@ -334,11 +334,11 @@ with tabs[2]:
              "scientific publication"
              """)
     # Affichage de l'image
-    image_path= "references/Nuage des mots pour publication scientifique.png"
+    image_path= "references/nuage_des_mots_pour_publication_scientifique.png"
     st.image(image_path, caption="Nuage des mots pour publication scientifique", use_column_width=True)
 
     # Affichage de l'image
-    image_path = "references/Nuage des mots pour facture.png"
+    image_path = "references/nuage_des_mots_pour_facture.png"
     st.image(image_path, caption="Nuage des mots pour facture", use_column_width=True)
     
     st.write("""
