@@ -6,11 +6,19 @@ import seaborn as sns
 import json
 import plotly.express as px
 import plotly.graph_objects as go
-from src import image_grid_sample, image_read
 import os
 import glob
 import cv2
+import cv2
+import time
+import random
+import tensorflow as tf
+from typing import Tuple, Union, Optional, List
+from src import image_read, image_resize, image_grid_sample
 
+
+# Configuration de la page
+st.set_page_config(page_title="Accueil", page_icon="🏠", layout="wide")
 
 st.write("# Deuxième modélisation : Classification à partir des images.")
 
@@ -34,11 +42,68 @@ labels = ["Email",
 # =========================================================================================================
 if page == pages[0]:
 
-    st.header("Protocole d'entraînement des modèles")
+    st.header("Méthodologie d'entraînement des modèles")
+    st.markdown("""
+                - Normalisation du jeu de données PRADO
+                - Création d'un jeu d'entrainement de 6816 images et d'un jeu de test de 1704 images
+                - Choix des modèles
+                - Modélisation du pipeline de data augmentation
+                - Compilation des modèles
+                - Entrainement des modèles
+                - Evaluation des modèles
+                - Interprétation des modèles
+                """)
     st.divider()
 
-    st.header("Chargement des images")
-    # Voir image comparison complement streamlit pour montrer une image avant et après le passage dans la moulinette
+    st.header("Normalisation du jeu de données PRADO")
+
+    path_prado_original = "data/raw/data_04/images/image_0001338.jpg"
+    path_prado_normalized = "data/raw/data_04/a4_cni/image_0000034.jpg"
+
+    image_prado_original = image_read(path_prado_original)
+    image_prado_normalized = image_read(path_prado_normalized)
+
+    col_cni1, col_cni2 = st.columns(
+        2, vertical_alignment="center", gap="large")
+    with col_cni1:
+        st.image("data/raw/data_04/images/image_0001338.jpg",
+                 caption="Image avant normalisation")
+    with col_cni2:
+        st.image("data/raw/data_04/a4_cni/image_0000034.jpg",
+                 width=300, caption="Image après normalisation format A4")
+    st.divider()
+
+    st.header("Data augmentation")
+
+    st.markdown(
+        """
+        Traite une image en appliquant diverses augmentations et une normalisation.
+
+        Les étapes de traitement incluent :
+        1. Lecture de l'image en mode 'rgb' ou 'gris'.
+        2. Conversion des images en niveaux de gris en RGB.
+        3. Conversion de l'image en un tenseur TensorFlow.
+        4. Compression de l'image avec une qualité aléatoire.
+        5. Retournement aléatoire de l'image.
+        6. Ajout de bruit "sel et poivre" avec des densités aléatoires.
+        7. Ajout de bruit gaussien avec une moyenne et un écart-type aléatoires.
+        8. Redimensionnement de l'image à 224x224 pixels.
+        9. Normalisation de l'image avec une moyenne et un écart-type spécifiés.
+        """
+    )
+
+    image_path = "data/raw/data_01/a4_data_01/image_0000064.jpg"
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        original = image_read(image_path)
+        st.image("references/original_before_augmentation.png",
+                 caption=f"Image d'entrée format A4")
+
+    with col2:
+        st.image("references/data_augmentation.jpg",
+                 caption="Image output format 224x224")
     st.divider()
 
     st.header("Choix des modèles")
@@ -50,7 +115,7 @@ if page == pages[0]:
 if page == pages[1]:
 
     options = st.sidebar.multiselect(
-        "Choix des modèles", models_list, models_list)
+        "Choix des modèles", models_list, ["CNN", "ResNet50"])
 
     if options:
         st.header("Les courbes d'entraînements")
@@ -244,7 +309,7 @@ if page == pages[2]:
                     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
                     cols[i].image(
                         image_grid_sample(
-                            [img], 1, 1, square_size=600, img_layout='center', seed=42), caption=f"Prédiction : {pred_category}")
+                            [img], 1, 1, square_size=400, img_layout='center', seed=42), caption=f"Prédiction : {pred_category}")
 
         st.divider()
 
