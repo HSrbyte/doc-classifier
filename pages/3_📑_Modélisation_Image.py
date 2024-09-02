@@ -106,7 +106,40 @@ if page == pages[0]:
                  caption="Image output format 224x224")
     st.divider()
 
-    st.header("Choix des modèles")
+    st.header("Présentation des Modèles de Classification d'Images")
+    # TODO Faire df avec nom modèle, provenance(auteurs), description générale
+    st.markdown("### **CNN (from scratch)**")
+    st.image("references/cnn_model_visual.png")
+
+    st.markdown("""
+    ### **SqueezeNet**
+    - **Concept**: Modèle léger, efficient en termes de taille.
+    - **Architecture**: Utilise des **Fire modules** avec des couches de convolution compactes.
+    - **Provenance**: Développé par **DeepScale** en 2016.
+    - **Entraînement**: Pré-entraîné sur **ImageNet**.
+    - **Applications**: Reconnaissance d'objets sur des appareils avec ressources limitées (smartphones, IoT).
+
+    ### **MobileNetV2**
+    - **Concept**: Modèle optimisé pour les appareils mobiles, performant avec peu de ressources.
+    - **Architecture**: Basé sur les **Inverted Residuals** et les couches de convolution profonde.
+    - **Provenance**: Développé par **Google** en 2018.
+    - **Entraînement**: Pré-entraîné sur **ImageNet**.
+    - **Applications**: Classification d'images en temps réel, applications de vision sur mobile, AR.
+
+    ### **EfficientNetB1**
+    - **Concept**: Modèle équilibré, maximisant précision et efficacité computationnelle.
+    - **Architecture**: Utilise des **Compound Scaling** pour équilibrer profondeur, largeur, et résolution.
+    - **Provenance**: Développé par **Google** en 2019.
+    - **Entraînement**: Pré-entraîné sur **ImageNet**.
+    - **Applications**: Classification d'images haute performance, applications nécessitant une précision élevée avec des ressources limitées.
+
+    ### **ResNet50**
+    - **Concept**: Modèle profond utilisant des **Residual Blocks** pour éviter le problème de gradient de vanishing.
+    - **Architecture**: 50 couches avec des connexions résiduelles permettant une formation plus stable des réseaux profonds.
+    - **Provenance**: Développé par **Microsoft Research** en 2015.
+    - **Entraînement**: Pré-entraîné sur **ImageNet**.
+    - **Applications**: Classification d'images, détection d'objets, reconnaissance de visages.
+                """)
 
 
 # =========================================================================================================
@@ -273,11 +306,11 @@ if page == pages[2]:
         "Choix du modèle", models_list)
 
     selected_doc = st.sidebar.selectbox(
-        "Choix du type de document à analyser", options=labels)
+        "Choix du type de document à analyser", options=labels, index=4)
 
     if options:
-        st.header(
-            f'Analyse des erreurs de prédiction du modèle {options} pour la classe "{selected_doc}" :')
+        st.markdown(
+            f'#### Analyse des erreurs de prédiction du modèle {options} pour la classe "{selected_doc}"')
 
         df_wrong_pred = pd.read_csv(
             f"references/{options}/wrong_predictions_{options}")
@@ -314,7 +347,7 @@ if page == pages[2]:
         st.divider()
 
         st.header("Grad-CAM")
-        st.markdown('Images originales')
+        st.markdown('#### Images originales')
 
         # Define the directory and pattern for the files
         file_pattern_originale = fr'references/{options}/originals/original_{options}_{selected_doc}_*.jpg'
@@ -336,7 +369,7 @@ if page == pages[2]:
 
 # -------------------------------------HEATMAPS--------------------------------------
 
-        st.markdown("Image GradCam")
+        st.markdown("#### Image GradCam")
         # Define the directory and pattern for the files
         file_pattern_heatmap = fr'references/{options}/heatmaps/heatmap_{options}_{selected_doc}_*.jpg'
         # List all files matching the pattern
