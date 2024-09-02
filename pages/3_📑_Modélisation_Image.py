@@ -309,6 +309,8 @@ if page == pages[2]:
         "Choix du type de document à analyser", options=labels, index=4)
 
     if options:
+
+        # ----------------------------Wrong predictions--------------------------------------------------------
         st.markdown(
             f'#### Analyse des erreurs de prédiction du modèle {options} pour la classe "{selected_doc}"')
 
@@ -343,7 +345,12 @@ if page == pages[2]:
                     cols[i].image(
                         image_grid_sample(
                             [img], 1, 1, square_size=400, img_layout='center', seed=42), caption=f"Prédiction : {pred_category}")
+        else:
+            st.markdown(
+                "Le modèle a pu prédire correctement toutes les images de cette catégorie")
 
+
+# -----------------------------------GradCam-------------------------------------------------------
         st.divider()
 
         st.header("Grad-CAM")
