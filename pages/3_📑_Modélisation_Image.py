@@ -107,7 +107,7 @@ if page == pages[0]:
     st.divider()
 
     st.header("Présentation des Modèles de Classification d'Images")
-    # TODO Faire df avec nom modèle, provenance(auteurs), description générale
+
     st.markdown("### **CNN (from scratch)**")
     st.image("references/cnn_model_visual.png")
 
