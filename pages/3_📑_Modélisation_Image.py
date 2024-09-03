@@ -110,11 +110,13 @@ if page == pages[0]:
 
     st.markdown("### **CNN (from scratch)**")
     st.image("references/cnn_model_visual.png")
+    st.markdown("- **Nombre de paramètres** : 44 399 174")
 
     st.markdown("""
     ### **SqueezeNet**
     - **Concept**: Modèle léger, efficient en termes de taille.
     - **Architecture**: Utilise des **Fire modules** avec des couches de convolution compactes.
+    - **Nombre de paramètres** : 738 502
     - **Provenance**: Développé par **DeepScale** en 2016.
     - **Entraînement**: Pré-entraîné sur **ImageNet**.
     - **Applications**: Reconnaissance d'objets sur des appareils avec ressources limitées (smartphones, IoT).
@@ -122,6 +124,7 @@ if page == pages[0]:
     ### **MobileNetV2**
     - **Concept**: Modèle optimisé pour les appareils mobiles, performant avec peu de ressources.
     - **Architecture**: Basé sur les **Inverted Residuals** et les couches de convolution profonde.
+    - **Nombre de paramètres** : 3 575 878
     - **Provenance**: Développé par **Google** en 2018.
     - **Entraînement**: Pré-entraîné sur **ImageNet**.
     - **Applications**: Classification d'images en temps réel, applications de vision sur mobile, AR.
@@ -129,6 +132,7 @@ if page == pages[0]:
     ### **EfficientNetB1**
     - **Concept**: Modèle équilibré, maximisant précision et efficacité computationnelle.
     - **Architecture**: Utilise des **Compound Scaling** pour équilibrer profondeur, largeur, et résolution.
+    - **Nombre de paramètres** : 6 904 717
     - **Provenance**: Développé par **Google** en 2019.
     - **Entraînement**: Pré-entraîné sur **ImageNet**.
     - **Applications**: Classification d'images haute performance, applications nécessitant une précision élevée avec des ressources limitées.
@@ -136,6 +140,7 @@ if page == pages[0]:
     ### **ResNet50**
     - **Concept**: Modèle profond utilisant des **Residual Blocks** pour éviter le problème de gradient de vanishing.
     - **Architecture**: 50 couches avec des connexions résiduelles permettant une formation plus stable des réseaux profonds.
+    - **Nombre de paramètres** : 24 113 798
     - **Provenance**: Développé par **Microsoft Research** en 2015.
     - **Entraînement**: Pré-entraîné sur **ImageNet**.
     - **Applications**: Classification d'images, détection d'objets, reconnaissance de visages.
@@ -153,59 +158,61 @@ if page == pages[1]:
     if options:
         st.header("Les courbes d'entraînements")
 
-        def plot_val():
+        def plot_lines(options):
+            # Create tabs based on the selected models
+            tab_model = st.tabs(options)
 
-            df_loss = pd.DataFrame()
-            df_acc = pd.DataFrame()
-            df_loss["Epoch"] = range(1, 100 + 1)
-            df_acc["Epoch"] = df_loss["Epoch"]
+            # Iterate through each option and corresponding tab
+            for i, name in enumerate(options):
+                with tab_model[i]:
+                    # Define the file path for the confusion matrix CSV
+                    # file_path = f"results/confusion_matrix_{name}.csv"
+                    file_open = open(f"models/{name}_history.json")
 
-            for name in options:
-                file_path = f"models/{name}_history.json"
+                    # into a DataFrame
+                    df_json = pd.DataFrame(json.load(file_open))
 
-                with open(file_path, "r") as file:
-                    data = json.load(file)
+                    dict_rename = {'loss': "Training Loss",
+                                   'accuracy': "Training Accuracy",
+                                   'val_loss': "Validation Loss",
+                                   'val_accuracy': "Validation Accuracy"}
 
-                df_loss[name] = data["val_loss"]
-                df_acc[name] = data["val_accuracy"]
+                    df_json = df_json.rename(dict_rename, axis=1)
 
-            fig_loss = px.line(df_loss, x="Epoch", y=options)
-            fig_loss.update_layout(
-                title={
-                    'text': "Comparaison des Loss-Validation en fonction des Epochs ",
-                    'y': 0.92,
-                    'x': 0.5,
-                    'xanchor': 'center',
-                    'yanchor': 'top'},
-                xaxis_title="Epochs",
-                yaxis_title="Loss",
-                legend_title="Modèles"
-            )
+                    df_json_loss = df_json[[
+                        "Training Loss", "Validation Loss"]]
+                    df_json_accuracy = df_json[[
+                        "Training Accuracy", "Validation Accuracy"]]
 
-            fig_acc = px.line(df_acc, x="Epoch", y=options)
-            fig_acc.update_layout(
-                title={
-                    'text': "Comparaison des Accuracy-Validation en fonction des Epochs",
-                    'y': 0.92,
-                    'x': 0.5,
-                    'xanchor': 'center',
-                    'yanchor': 'top'},
-                xaxis_title="Epochs",
-                yaxis_title="Accuracy",
-                legend_title="Modèles")
+                    # Définition graphe loss
+                    fig_loss = px.line(df_json_loss)
+                    fig_loss.update_layout(
+                        height=400,
+                        legend_title="",
+                    )
+                    fig_loss.update_xaxes(title="Epoch")
+                    fig_loss.update_yaxes(title="Loss")
 
-            st.plotly_chart(fig_loss)
-            st.plotly_chart(fig_acc)
+                    # Définition graphe accuracy
+                    fig_accuracy = px.line(df_json_accuracy)
+                    fig_accuracy.update_layout(
+                        height=400,
+                        legend_title="",
+                    )
+                    fig_accuracy.update_xaxes(title="Epoch")
+                    fig_accuracy.update_yaxes(title="Accuracy")
 
-        plot_val()
+                    # Display the chart in Streamlit
+                    st.plotly_chart(fig_loss)
+                    st.plotly_chart(fig_accuracy)
+
+        plot_lines(options)
+
         st.divider()
 
         st.header("Les matrices de confusions")
 
-        label_axis = ["Email", "Handwritten", "Invoice",
-                      "ID Card", "Passeport", "Scientific publication"]
-
-        def confusion_matrix_display(options, label_axis):
+        def confusion_matrix_display(options, labels):
             # Create tabs based on the selected models
             tab_model = st.tabs(options)
 
@@ -223,8 +230,8 @@ if page == pages[1]:
                     fig = px.imshow(df,
                                     labels=dict(x="Classes prédites",
                                                 y="Classes réelles"),
-                                    x=label_axis,
-                                    y=label_axis,
+                                    x=labels,
+                                    y=labels,
                                     text_auto=True,
                                     aspect="auto"
                                     )
@@ -233,7 +240,7 @@ if page == pages[1]:
                     # Display the chart in Streamlit
                     st.plotly_chart(fig)
 
-        confusion_matrix_display(options, label_axis)
+        confusion_matrix_display(options, labels)
 
         st.divider()
 
