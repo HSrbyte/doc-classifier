@@ -28,15 +28,15 @@ def display_image_samples_with_details(df, dataset_name):
     df_filtered = df[df['dataset'] == dataset_name]
     
     # Prendre un échantillon de 6 images
-    sample_df = df_filtered.sample(n=6)
+    sample_df = df_filtered.sample(n=8)
 
     # Créer une disposition de 2 lignes x 3 colonnes
-    rows = [st.columns(3) for _ in range(2)]
+    rows = [st.columns(4) for _ in range(2)]
 
     for idx, (row_idx, row) in enumerate(sample_df.iterrows()):
         # Calculer la ligne et la colonne où l'image doit être placée
-        row_num = idx // 3
-        col_num = idx % 3
+        row_num = idx // 4  
+        col_num = idx % 4
         
         with rows[row_num][col_num]:
             # Afficher l'image avec les informations en légende
@@ -70,6 +70,39 @@ tab1, tab2, tab3 = st.tabs(["SOURCES DE DONNÉES", "ANALYSE EXPLORATOIRE ET VISU
 
 #_______________________________________________________________________________________________________________________________________
 
+# Contenu de l'équipe déplacé dans la sidebar
+st.sidebar.markdown("### Équipe de Projet")
+
+# Mise en page avec des colonnes pour afficher les noms des auteurs dans la sidebar
+st.sidebar.markdown("""\n 
+                - Achraf Asri 
+                - Ayoub Benkou
+                - Bryan Fernandez
+                - Daniel Hryniewski""")
+
+st.sidebar.markdown("---")
+
+st.sidebar.markdown("### Management")
+
+# Affichage des détails du management dans la sidebar
+# Mise en page avec des colonnes pour afficher les noms et les logos sur la même ligne
+
+st.sidebar.markdown("""
+    - Sebastien S - _Project Manager_
+    - Lisa B - _Cohorte Chief_
+    """)
+
+st.sidebar.markdown("---")
+
+# Lien GitHub dans la sidebar
+st.sidebar.markdown(
+    """*More on doc-classifier* :
+    <a href="https://github.com/Scientest23/doc-classifier" target="_blank" rel="noopener noreferrer">
+        <img alt="GitHub" src="https://img.shields.io/badge/-GitHub-181717?style=flat&logo=github">
+    </a>
+    """,
+    unsafe_allow_html=True
+)
 
 # Contenu du premier onglet: Sources de données
 with tab1:
@@ -190,13 +223,13 @@ with tab1:
     # Afficher le graphique interactif dans Streamlit
     st.plotly_chart(fig)
 
-    st.markdown(""" #### Récaptilatif des observations :
-- **Incohérences de classement entre les catégories** : Présence de CNI dans la catégorie « passeport » et des factures dans la catégorie "justif_domicile".
-- **data_01** est uniquement composé de factures.
-- **data_02** montre un déséquilibre entre les catégories.
-- **data_03** est équilibré avec 5% d'images par catégorie.
-- **data_04** contient uniquement des documents d'identité, avec une prédominance de passeports.
-- Les catégories ont été uniformisées pour assurer la cohérence dans l'analyse. Par exemple, toutes les variantes de _facture_ ont été regroupées sous _invoice_, et les catégories liées aux pièces d'identité sous _id_pieces_.""")
+    st.markdown(""" > #####  *Récaptilatif des observations* :
+> - **Incohérences de classement entre les catégories** : Présence de CNI dans la catégorie « passeport » et des factures dans la catégorie "justif_domicile".
+> - **data_01** : uniquement composé de factures.
+> - **data_02** : montre un déséquilibre entre les catégories, ce dataset n'a pas été utilisé dans la suite du projet.
+> - **data_03** : équilibré avec 5% d'images par catégorie.
+> - **data_04** : contient uniquement des documents d'identité, avec une prédominance de passeports.
+> - Les catégories ont été uniformisées pour assurer la cohérence dans l'analyse. Par exemple, toutes les variantes de _facture_ ont été regroupées sous _invoice_, et les catégories liées aux pièces d'identité sous _id_pieces_.""")
 
 
     st.markdown("---")
@@ -206,9 +239,10 @@ with tab1:
 
 # Contenu du deuxième onglet: Analyse exploratoire et visualisation
 with tab2:
+    st.header("Visualisation des caractéristiques des images par dataset")
     # 1. Distribution des Dimensions des Images
-    with st.expander("Distribution des Dimensions des Images", expanded=False):
-        st.subheader("I - Distribution des Dimensions")
+    with st.expander("I - Dimensions des images", expanded=False):
+        st.subheader("I - Distribution des dimensions")
         
         # Nuage de points interactif
         scatter_fig = px.scatter(df_images, x='width', y='height', color='dataset',
@@ -218,22 +252,20 @@ with tab2:
 
         # Boxplot interactif des hauteurs
         boxplot_fig = px.box(df_images, x='dataset', y='height',
-                            title="Distribution des Hauteurs par Dataset",
+                            title="Distribution des hauteurs par dataset",
                             labels={'dataset': 'Dataset', 'height': 'Hauteur'})
         st.plotly_chart(boxplot_fig)
-
-        st.caption("Insérer commentaire ici")
     
     #_______________________________________________________________________________________________________________________________________
 
 
     # 2. Analyse de la Netteté et du Flou des Images
-    with st.expander("Analyse de la Netteté et du Flou des Images"):
-        st.subheader("II - Netteté et Flou")
+    with st.expander("II - Netteté et flou des images"):
+        st.subheader("II - Netteté et flou")
 
         # Violin plot interactif du flou avec options réduites
         violin_fig = px.violin(df_images, x='dataset', y='bluriness', box=True, points=False,
-                            title="Distribution du Flou par Dataset",
+                            title="Distribution du flou par dataset",
                             labels={'dataset': 'Dataset', 'bluriness': 'Flou'})
         violin_fig.update_traces(hoverinfo='skip')  # Désactiver les tooltips
         st.plotly_chart(violin_fig)
@@ -252,8 +284,8 @@ with tab2:
     #_______________________________________________________________________________________________________________________________________
 
     # 3. Répartition des Catégories d'Images
-    with st.expander("Répartition des Catégories d'Images"):
-        st.subheader("III - Répartition des Catégories")
+    with st.expander("III - Répartition des catégories d'images"):
+        st.subheader("III - Répartition des catégories")
 
         # Préparer les données pour un diagramme en barres empilées
         counts = df_images['label'].value_counts().reset_index()
@@ -277,7 +309,7 @@ with tab2:
                                     labels={'label': 'Catégorie', 'pixels': 'Pixels (Hauteur x Largeur)'})
         st.plotly_chart(boxplot_pixels_fig)
 
-        st.caption("""
+        st.info("""
             L'analyse des graphiques a permis de sélectionner 6 classes parmi 22, en se basant sur leur représentation
             suffisante dans les datasets : 
 
@@ -292,8 +324,8 @@ with tab2:
 
 
     # 4. Analyse des Couleurs et de la Nature des Images
-    with st.expander("Analyse des Couleurs et de la Nature des Images"):
-        st.subheader("VI - Couleurs et Nature des Images")
+    with st.expander("VI - Analyse des couleurs et de la nature des images", expanded = True):
+        st.subheader("VI - Couleurs et nature des images")
 
         # Liste des datasets disponibles (data_01, data_02, ...)
         datasets = ["data_01", "data_02", "data_03", "data_04"]
@@ -338,18 +370,10 @@ with tab2:
         # Affichage du graphique dans Streamlit
         st.plotly_chart(fig)
 
-        # Option pour sauvegarder le graphique
-        save_option = st.button("Sauvegarder le graphique")
-
-        if save_option:
-            fig.write_html(f"histogram_{dataset_choice}.html")
-            st.success(f"Graphique sauvegardé sous le nom 'histogram_{dataset_choice}.html'")
-
-
     # Footer
-    st.markdown("### Conclusion")
-    st.write("""
-    Ces visualisations offrent une vue d'ensemble des caractéristiques principales des datasets, 
+    st.markdown("""
+    > #### *_Conclusion_*
+    > Ces visualisations offrent une vue d'ensemble des caractéristiques principales des datasets, 
     notamment les dimensions, la netteté, la répartition des catégories, et la nature des images. 
     Ces insights sont essentiels pour orienter les prochaines étapes de la préparation des données 
     et de la construction du modèle de classification.
@@ -388,18 +412,18 @@ with tab3:
     #_______________________________________________________________________________________________________________________________________
 
     # Contenu du troisième onglet: Analyse des données textuelles (OCR)
-    with st.expander("Distribution des langues"):
+    with st.expander("Analyse linguistique", expanded= True):
         st.subheader("Distribution des langues dans l'ensemble des jeux de données")
         lang_count = df['lang'].value_counts()
         fig_lang = px.bar(x=lang_count.index, y=lang_count.values, labels={'x': 'Langue', 'y': 'Nombre d\'occurrences'},
                         )
         st.plotly_chart(fig_lang)
-        st.write("La langue anglaise est la plus présente dans notre jeu de données global représentant 75.44%.")
+        st.info("La langue anglaise est la plus présente dans notre jeu de données global représentant 75.44%.")
 
 
     #_______________________________________________________________________________________________________________________________________
 
-    with st.expander("Distribution du nombre de mots par page par catégorie"):
+    with st.expander("Nombre de mots par catégorie"):
         st.subheader("Distribution du nombre de mots par page par catégorie")
 
         # Sélectionner un dataset pour afficher les graphiques correspondants
@@ -466,5 +490,7 @@ with tab3:
             plt.imshow(wordcloud, interpolation='bilinear')
             plt.axis("off")
             st.pyplot(plt)
+
+
 
 
