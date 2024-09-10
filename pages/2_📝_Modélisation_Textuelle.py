@@ -9,6 +9,41 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 
+# Contenu de l'équipe déplacé dans la sidebar
+st.sidebar.markdown("### Équipe de Projet")
+
+# Mise en page avec des colonnes pour afficher les noms des auteurs dans la sidebar
+st.sidebar.markdown("""\n 
+                - Achraf Asri 
+                - Ayoub Benkou
+                - Bryan Fernandez
+                - Daniel Hryniewski""")
+
+st.sidebar.markdown("---")
+
+st.sidebar.markdown("### Management")
+
+# Affichage des détails du management dans la sidebar
+# Mise en page avec des colonnes pour afficher les noms et les logos sur la même ligne
+
+st.sidebar.markdown("""
+    - Sebastien S - _Project Manager_
+    - Lisa B - _Cohorte Chief_
+    """)
+
+st.sidebar.markdown("---")
+
+# Lien GitHub dans la sidebar
+st.sidebar.markdown(
+    """*More on doc-classifier* :
+    <a href="https://github.com/Scientest23/doc-classifier" target="_blank" rel="noopener noreferrer">
+        <img alt="GitHub" src="https://img.shields.io/badge/-GitHub-181717?style=flat&logo=github">
+    </a>
+    """,
+    unsafe_allow_html=True
+)
+
+
 # Fonction pour charger les données JSON
 def st_read_jsonfile(file_path):
     with open(file_path, 'r') as file:
@@ -101,7 +136,7 @@ def st_plot_search_results(cv_results: dict, best_params: dict, param_grid: dict
 st.write("# Première modélisation : Classification à partir des données textuelles.")
 
 # Onglets principaux
-tabs = st.tabs(["Préambule", "Choix des Modèles", "Résultats et Conclusions"])
+tabs = st.tabs(["Préambule", "Choix des Modèles", "Résultats"])
 
 # Onglet Introduction et Prétraitement des Données
 with tabs[0]:
@@ -129,6 +164,16 @@ with tabs[0]:
     
     st.write("**Dataframes :**")
 
+    # Bouton pour afficher/cacher le contenu du JSON `most_common_words.json`
+    if st.button("most_common_words"):
+        st.session_state.show_json = not st.session_state.show_json
+
+    # Si `show_json` est True, afficher le contenu du JSON
+    if st.session_state.show_json:
+        with open("data/processed/most_common_words.json", "r") as file:
+            data_json = json.load(file)
+            st.json(data_json)  # Afficher le JSON dans un format lisible
+
     # Bouton pour afficher/cacher le DataFrame `words_structure_train`
     if st.button("words_structure_train"):
         st.session_state.show_df_train = not st.session_state.show_df_train
@@ -147,16 +192,7 @@ with tabs[0]:
         df_test = pd.read_csv("data/processed/words_structure_test.csv")
         st.dataframe(df_test.head(5))
     
-    # Bouton pour afficher/cacher le contenu du JSON `most_common_words.json`
-    if st.button("most_common_words"):
-        st.session_state.show_json = not st.session_state.show_json
-
-    # Si `show_json` est True, afficher le contenu du JSON
-    if st.session_state.show_json:
-        with open("data/processed/most_common_words.json", "r") as file:
-            data_json = json.load(file)
-            st.json(data_json)  # Afficher le JSON dans un format lisible
-
+    
     st.write("""
     - **Trois Approches:** « Trois méthodes de modélisation ont été envisagées : »
         - **Utilisation uniquement du corpus des pages. le dataframe sera appelé par la suite "words"** (Approche 1).
@@ -207,7 +243,7 @@ data_results = {
 
 with tabs[2] : 
     # Onglets pour organiser les résultats
-    tabs = st.tabs(["GridSearchCV", "Best Models", "Conclusions"])
+    tabs = st.tabs(["GridSearchCV", "Best Models"])
 
 
     # Onglet Grid Search CV
@@ -322,27 +358,3 @@ with tabs[2] :
         st.markdown(markdown_table)
 
 
-# Onglet Conclusions (à remplir selon vos besoins)
-with tabs[2]:
-    st.header("Résultats et Conclusions")
-    # Points clés
-    st.write("""
-    - **Modèle retenu :** Voting Classifier avec une accuracy de 87.8%
-    - **Limitation des résultats :** 
-        - Données biaisées
-        - Images liées au tabac dans les catégories "email", "invoice", 
-             "scientific publication"
-             """)
-    # Affichage de l'image
-    image_path= "references/nuage_des_mots_pour_publication_scientifique.png"
-    st.image(image_path, caption="Nuage des mots pour publication scientifique", use_column_width=True)
-
-    # Affichage de l'image
-    image_path = "references/nuage_des_mots_pour_facture.png"
-    st.image(image_path, caption="Nuage des mots pour facture", use_column_width=True)
-    
-    st.write("""
-    - **Impact :** 
-        - Haute performance dans le domaine spécifique
-        - Moins efficace dans d'autres contextes généraux
-    """)
