@@ -63,11 +63,4 @@ PRADO | 139.6 Mo | 1 589 | [Google Drive](https://drive.google.com/file/d/1Seii3
 RVL-CDIP Dataset | 38.8 Go | 400 000 | [Hugging Face](https://huggingface.co/datasets/aharley/rvl_cdip/resolve/main/data/rvl-cdip.tar.gz?download=true)
 
 
-To extract and import datasets, see the notebook: [00-hryniewski-download-datasets.ipynb](notebooks/00-hryniewski-download-datasets.ipynb)
-
-
-## 🙌 Authors:
-- Bryan Fernandez
-- Ayoub Benkou
-- Achraf Asri
-- Daniel Hryniewski
+To extract and import datasets, see the notebook: [00-hryniewski-download-datasets.ipynb](notebooks/00-download-datasets.ipynb)
